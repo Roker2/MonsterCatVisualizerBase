@@ -26,6 +26,7 @@ void CloudsContainer::generateCloud(float canvasHeight)
     float speedX = randomFloat() * 0.5f + 0.2f;
     float speedY = (randomFloat() - 0.5f) * 0.5f;
     m_clouds.emplace_back(x, y, radius, r, g, b, a, speedX, speedY);
+    cloudIsGenerated();
 }
 
 void CloudsContainer::cleanUp(float canvasHeight, float canvasWidth)
@@ -54,4 +55,5 @@ void CloudsContainer::update(uint32_t deltaTime, float animationSpeed)
     {
         cloud.update(deltaTime, animationSpeed);
     }
+    updated();
 }

@@ -19,6 +19,10 @@ public:
     virtual void aboutToRemove(const std::vector<size_t>& indices) {};
     virtual void removed() {};
 
+    virtual void updated() {};
+
+    virtual void particleIsGenerated() {};
+
 protected:
     std::vector<Particle> m_particles;
 };

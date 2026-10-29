@@ -20,6 +20,7 @@ void LinesContainer::generateLine(float canvasHeight)
     float a = 1.f;
     float speed = randomFloat() * 0.5f + 0.2f;
     m_lines.emplace_back(x1, y1, angle, r, g, b, a, speed, length, 2.f);
+    lineIsGenerated();
 }
 
 void LinesContainer::cleanUp(float canvasHeight, float canvasWidth)
@@ -47,4 +48,5 @@ void LinesContainer::update(uint32_t deltaTime, float animationSpeed)
     {
         line.update(deltaTime, animationSpeed);
     }
+    updated();
 }

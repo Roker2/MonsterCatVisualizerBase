@@ -19,6 +19,7 @@ void ParticlesContainer::generateParticle(float canvasHeight)
     float speedX = randomFloat() * 0.5f + 0.2f;
     float speedY = (randomFloat() - 0.5f) * 0.5f;
     m_particles.emplace_back(x, y, radius, r, g, b, a, speedX, speedY);
+    particleIsGenerated();
 }
 
 void ParticlesContainer::cleanUp(float canvasHeight, float canvasWidth)
@@ -42,4 +43,5 @@ void ParticlesContainer::update(uint32_t deltaTime, float animationSpeed)
     {
         particle.update(deltaTime, animationSpeed);
     }
+    updated();
 }

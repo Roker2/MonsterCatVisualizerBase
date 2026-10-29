@@ -6,11 +6,11 @@ static constexpr int baseParticleSpawnInterval = 100;
 static constexpr int baseLineSpawnInterval = 1500;
 static constexpr int baseCloudSpawnInterval = 400;
 
-Animator::Animator(CloudsContainer cloudsContainer, LinesContainer linesContainer, ParticlesContainer particlesContainer,
+Animator::Animator(CloudsContainerPtr cloudsContainer, LinesContainerPtr linesContainer, ParticlesContainerPtr particlesContainer,
                    float height, float width)
-    : m_cloudsContainer(std::move(cloudsContainer))
-    , m_linesContainer(std::move(linesContainer))
-    , m_particlesContainer(std::move(particlesContainer))
+    : m_cloudsContainer(cloudsContainer)
+    , m_linesContainer(linesContainer)
+    , m_particlesContainer(particlesContainer)
     , m_cloudSpawnTimeAccumulator(0)
     , m_particleSpawnTimeAccumulator(0)
     , m_lineSpawnTimeAccumulator(0)
@@ -31,27 +31,27 @@ void Animator::animate(uint32_t deltaTime, float animationSpeed)
 
     while (m_cloudSpawnTimeAccumulator >= desiredCloudSpawnInterval)
     {
-        m_cloudsContainer.generateCloud(m_height);
+        m_cloudsContainer->generateCloud(m_height);
         m_cloudSpawnTimeAccumulator -= desiredCloudSpawnInterval;
     }
 
     while (m_particleSpawnTimeAccumulator >= desiredParticleSpawnInterval)
     {
-        m_particlesContainer.generateParticle(m_height);
+        m_particlesContainer->generateParticle(m_height);
         m_particleSpawnTimeAccumulator -= desiredParticleSpawnInterval;
     }
 
     while (m_lineSpawnTimeAccumulator >= desiredLineSpawnInterval)
     {
-        m_linesContainer.generateLine(m_height);
+        m_linesContainer->generateLine(m_height);
         m_lineSpawnTimeAccumulator -= desiredLineSpawnInterval;
     }
 
-    m_cloudsContainer.update(deltaTime, animationSpeed);
-    m_particlesContainer.update(deltaTime, animationSpeed);
-    m_linesContainer.update(deltaTime, animationSpeed);
+    m_cloudsContainer->update(deltaTime, animationSpeed);
+    m_particlesContainer->update(deltaTime, animationSpeed);
+    m_linesContainer->update(deltaTime, animationSpeed);
 
-    m_cloudsContainer.cleanUp(m_height, m_width);
-    m_linesContainer.cleanUp(m_height, m_width);
-    m_particlesContainer.cleanUp(m_height, m_width);
+    m_cloudsContainer->cleanUp(m_height, m_width);
+    m_linesContainer->cleanUp(m_height, m_width);
+    m_particlesContainer->cleanUp(m_height, m_width);
 }

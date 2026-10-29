@@ -39,9 +39,9 @@ void CloudsContainer::cleanUp(float canvasHeight, float canvasWidth)
         float minX = cloud.getX() - cloud.getRadius();
         float maxY = cloud.getY() + cloud.getRadius();
         float minY = cloud.getY() - cloud.getRadius();
-        if (maxX > canvasWidth ||
-            minY < 0 ||
-            maxY > canvasHeight)
+        if (minX > canvasWidth ||
+            maxY < 0 ||
+            minY > canvasHeight)
         indicesToRemove.push_back(i);
     }
     aboutToRemove(indicesToRemove);

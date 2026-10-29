@@ -27,10 +27,15 @@ void ParticlesContainer::cleanUp(float canvasHeight, float canvasWidth)
     std::vector<size_t> indicesToRemove;
     for (size_t i = 0; i < m_particles.size(); i++)
     {
-        if (m_particles[i].getX() + m_particles[i].getRadius() > canvasWidth ||
-            m_particles[i].getY() + m_particles[i].getRadius() > canvasHeight ||
-            m_particles[i].getY() - m_particles[i].getRadius() < 0)
-            indicesToRemove.push_back(i);
+        const Particle& particle = m_particles[i];
+        float maxX = particle.getX() + particle.getRadius();
+        float minX = particle.getX() - particle.getRadius();
+        float maxY = particle.getY() + particle.getRadius();
+        float minY = particle.getY() - particle.getRadius();
+        if (minX > canvasWidth ||
+            maxY < 0 ||
+            minY > canvasHeight)
+        indicesToRemove.push_back(i);
     }
     aboutToRemove(indicesToRemove);
     removeIndices(m_particles, indicesToRemove);

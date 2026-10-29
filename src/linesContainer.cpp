@@ -32,9 +32,9 @@ void LinesContainer::cleanUp(float canvasHeight, float canvasWidth)
         float minX = std::min(m_lines[i].getX1(), m_lines[i].getX2());
         float maxY = std::max(m_lines[i].getY1(), m_lines[i].getY2());
         float minY = std::min(m_lines[i].getY1(), m_lines[i].getY2());
-        if (maxX > canvasWidth ||
-            minY < 0 ||
-            maxY > canvasHeight)
+        if (minX > canvasWidth ||
+            maxY < 0 ||
+            minY > canvasHeight)
         indicesToRemove.push_back(i);
     }
     aboutToRemove(indicesToRemove);

@@ -24,21 +24,21 @@ void LinesContainer::generateLine(float canvasHeight)
 
 void LinesContainer::cleanUp(float canvasHeight, float canvasWidth)
 {
-    m_lines.erase(
-        std::remove_if(m_lines.begin(), m_lines.end(),
-                       [canvasHeight, canvasWidth](const Line& line) {
-                           float maxX = std::max(line.getX1(), line.getX2());
-                           float minX = std::min(line.getX1(), line.getX2());
-                           float maxY = std::max(line.getY1(), line.getY2());
-                           float minY = std::min(line.getY1(), line.getY2());
-
-                           if (maxX > canvasWidth ||
-                               minY < 0 ||
-                               maxY > canvasHeight)
-                               return true;
-                           return false;
-                       }),
-        m_lines.end());
+    std::vector<size_t> indicesToRemove;
+    for (size_t i = 0; i < m_lines.size(); i++)
+    {
+        float maxX = std::max(m_lines[i].getX1(), m_lines[i].getX2());
+        float minX = std::min(m_lines[i].getX1(), m_lines[i].getX2());
+        float maxY = std::max(m_lines[i].getY1(), m_lines[i].getY2());
+        float minY = std::min(m_lines[i].getY1(), m_lines[i].getY2());
+        if (maxX > canvasWidth ||
+            minY < 0 ||
+            maxY > canvasHeight)
+        indicesToRemove.push_back(i);
+    }
+    aboutToRemove(indicesToRemove);
+    removeIndices(m_lines, indicesToRemove);
+    removed();
 }
 
 void LinesContainer::update(uint32_t deltaTime, float animationSpeed)

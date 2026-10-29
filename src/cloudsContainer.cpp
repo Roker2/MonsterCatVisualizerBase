@@ -30,21 +30,22 @@ void CloudsContainer::generateCloud(float canvasHeight)
 
 void CloudsContainer::cleanUp(float canvasHeight, float canvasWidth)
 {
-    m_clouds.erase(
-        std::remove_if(m_clouds.begin(), m_clouds.end(),
-                       [canvasHeight, canvasWidth](const Cloud& cloud) {
-                           float maxX = cloud.getX() + cloud.getRadius();
-                           float minX = cloud.getX() - cloud.getRadius();
-                           float maxY = cloud.getY() + cloud.getRadius();
-                           float minY = cloud.getY() - cloud.getRadius();
-
-                           if (maxX > canvasWidth ||
-                               minY < 0 ||
-                               maxY > canvasHeight)
-                               return true;
-                           return false;
-                       }),
-        m_clouds.end());
+    std::vector<size_t> indicesToRemove;
+    for (size_t i = 0; i < m_clouds.size(); i++)
+    {
+        const Cloud& cloud = m_clouds[i];
+        float maxX = cloud.getX() + cloud.getRadius();
+        float minX = cloud.getX() - cloud.getRadius();
+        float maxY = cloud.getY() + cloud.getRadius();
+        float minY = cloud.getY() - cloud.getRadius();
+        if (maxX > canvasWidth ||
+            minY < 0 ||
+            maxY > canvasHeight)
+        indicesToRemove.push_back(i);
+    }
+    aboutToRemove(indicesToRemove);
+    removeIndices(m_clouds, indicesToRemove);
+    removed();
 }
 
 void CloudsContainer::update(uint32_t deltaTime, float animationSpeed)

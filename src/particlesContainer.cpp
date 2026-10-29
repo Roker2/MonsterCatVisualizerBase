@@ -23,16 +23,17 @@ void ParticlesContainer::generateParticle(float canvasHeight)
 
 void ParticlesContainer::cleanUp(float canvasHeight, float canvasWidth)
 {
-    m_particles.erase(
-        std::remove_if(m_particles.begin(), m_particles.end(),
-                       [canvasHeight, canvasWidth](const Particle& particle) {
-                           if (particle.getX() + particle.getRadius() > canvasWidth ||
-                               particle.getY() + particle.getRadius() > canvasHeight ||
-                               particle.getY() - particle.getRadius() < 0)
-                               return true;
-                           return false;
-                       }),
-        m_particles.end());
+    std::vector<size_t> indicesToRemove;
+    for (size_t i = 0; i < m_particles.size(); i++)
+    {
+        if (m_particles[i].getX() + m_particles[i].getRadius() > canvasWidth ||
+            m_particles[i].getY() + m_particles[i].getRadius() > canvasHeight ||
+            m_particles[i].getY() - m_particles[i].getRadius() < 0)
+            indicesToRemove.push_back(i);
+    }
+    aboutToRemove(indicesToRemove);
+    removeIndices(m_particles, indicesToRemove);
+    removed();
 }
 
 void ParticlesContainer::update(uint32_t deltaTime, float animationSpeed)

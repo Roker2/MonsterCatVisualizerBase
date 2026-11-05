@@ -12,6 +12,7 @@ void CloudsContainer::generateCloud(float canvasHeight)
     float yMin = canvasHeight * 0.4f;
     float yMax = canvasHeight * 0.6f;
     float y = yMin + (yMax - yMin) * randomFloat();
+    bool colored = false;
     uint8_t r = 176;
     uint8_t g = 176;
     uint8_t b = 176;
@@ -21,11 +22,12 @@ void CloudsContainer::generateCloud(float canvasHeight)
         r = 255;
         g = 0;
         b = 0;
+        colored = true;
     }
     float a = 0.01f;
     float speedX = randomFloat() * 0.5f + 0.2f;
     float speedY = (randomFloat() - 0.5f) * 0.5f;
-    m_clouds.emplace_back(x, y, radius, r, g, b, a, speedX, speedY);
+    m_clouds.emplace_back(x, y, radius, r, g, b, a, speedX, speedY, colored);
     cloudIsGenerated();
 }
 
@@ -56,4 +58,13 @@ void CloudsContainer::update(uint32_t deltaTime, float animationSpeed)
         cloud.update(deltaTime, animationSpeed);
     }
     updated();
+}
+
+void CloudsContainer::setColor(uint8_t r, uint8_t g, uint8_t b)
+{
+    for (auto& cloud : m_clouds)
+    {
+        if (cloud.isColored())
+            cloud.setColor(r, g, b);
+    }
 }

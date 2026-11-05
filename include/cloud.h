@@ -8,7 +8,7 @@ namespace monsterCatVisualizer
 class Cloud
 {
 public:
-    Cloud(float x, float y, float radius, uint8_t r, uint8_t g, uint8_t b, float a, float speedX, float speedY);
+    Cloud(float x, float y, float radius, uint8_t r, uint8_t g, uint8_t b, float a, float speedX, float speedY, bool colored);
     ~Cloud() = default;
 
     void update(uint32_t deltaTime, float animationSpeed);
@@ -22,6 +22,9 @@ public:
     float getA() const noexcept;
     float getSpeedX() const noexcept;
     float getSpeedY() const noexcept;
+    bool isColored() const noexcept;
+
+    void setColor(uint8_t r, uint8_t g, uint8_t b) noexcept;
 
 private:
     float m_x;
@@ -33,6 +36,7 @@ private:
     float m_a;
     float m_speedX;
     float m_speedY;
+    bool m_colored;
 };
 
 } // namespace monsterCatVisualizer

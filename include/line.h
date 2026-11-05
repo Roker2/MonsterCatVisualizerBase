@@ -26,6 +26,8 @@ public:
     float getLength() const noexcept;
     float getLineWidth() const noexcept;
 
+    void setColor(uint8_t r, uint8_t g, uint8_t b) noexcept;
+
 private:
     float m_x1;
     float m_y1;

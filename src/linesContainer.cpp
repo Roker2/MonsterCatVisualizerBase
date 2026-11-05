@@ -50,3 +50,11 @@ void LinesContainer::update(uint32_t deltaTime, float animationSpeed)
     }
     updated();
 }
+
+void LinesContainer::setColor(uint8_t r, uint8_t g, uint8_t b)
+{
+    for (auto& line : m_lines)
+    {
+        line.setColor(r, g, b);
+    }
+}

@@ -2,8 +2,8 @@
 
 using namespace monsterCatVisualizer;
 
-Cloud::Cloud(float x, float y, float radius, uint8_t r, uint8_t g, uint8_t b, float a, float speedX, float speedY)
-    : m_x(x), m_y(y), m_radius(radius), m_r(r), m_g(g), m_b(b), m_a(a), m_speedX(speedX), m_speedY(speedY)
+Cloud::Cloud(float x, float y, float radius, uint8_t r, uint8_t g, uint8_t b, float a, float speedX, float speedY, bool colored)
+    : m_x(x), m_y(y), m_radius(radius), m_r(r), m_g(g), m_b(b), m_a(a), m_speedX(speedX), m_speedY(speedY), m_colored(colored)
 {
 }
 
@@ -56,4 +56,16 @@ float Cloud::getSpeedX() const noexcept
 float Cloud::getSpeedY() const noexcept
 {
     return m_speedY;
+}
+
+bool Cloud::isColored() const noexcept
+{
+    return m_colored;
+}
+
+void Cloud::setColor(uint8_t r, uint8_t g, uint8_t b) noexcept
+{
+    m_r = r;
+    m_g = g;
+    m_b = b;
 }

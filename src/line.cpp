@@ -77,3 +77,10 @@ float Line::getLineWidth() const noexcept
 {
     return m_lineWidth;
 }
+
+void Line::setColor(uint8_t r, uint8_t g, uint8_t b) noexcept
+{
+    m_r = r;
+    m_g = g;
+    m_b = b;
+}

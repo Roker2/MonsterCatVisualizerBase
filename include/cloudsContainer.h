@@ -15,6 +15,7 @@ public:
     void generateCloud(float canvasHeight);
     void cleanUp(float canvasHeight, float canvasWidth);
     void update(uint32_t deltaTime, float animationSpeed);
+    void setColor(uint8_t r, uint8_t g, uint8_t b);
 
     virtual void aboutToRemove(const std::vector<size_t>& indices) {};
     virtual void removed() {};

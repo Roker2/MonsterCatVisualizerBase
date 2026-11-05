@@ -5,6 +5,11 @@
 
 using namespace monsterCatVisualizer;
 
+CloudsContainer::CloudsContainer(uint8_t r, uint8_t g, uint8_t b)
+    : m_r(r), m_g(g), m_b(b)
+{
+}
+
 void CloudsContainer::generateCloud(float canvasHeight)
 {
     float radius = randomFloat() * 150 + 50;
@@ -18,10 +23,9 @@ void CloudsContainer::generateCloud(float canvasHeight)
     uint8_t b = 176;
     if (randomFloat() >= 0.6f)
     {
-        // red
-        r = 255;
-        g = 0;
-        b = 0;
+        r = m_r;
+        g = m_g;
+        b = m_b;
         colored = true;
     }
     float a = 0.01f;
@@ -62,6 +66,9 @@ void CloudsContainer::update(uint32_t deltaTime, float animationSpeed)
 
 void CloudsContainer::setColor(uint8_t r, uint8_t g, uint8_t b)
 {
+    m_r = r;
+    m_g = g;
+    m_b = b;
     for (auto& cloud : m_clouds)
     {
         if (cloud.isColored())

@@ -9,7 +9,7 @@ namespace monsterCatVisualizer
 class CloudsContainer
 {
 public:
-    CloudsContainer() = default;
+    CloudsContainer(uint8_t r = 255, uint8_t g = 0, uint8_t b = 0);
     virtual ~CloudsContainer() = default;
 
     void generateCloud(float canvasHeight);
@@ -26,6 +26,9 @@ public:
 
 protected:
     std::vector<Cloud> m_clouds;
+    uint8_t m_r;
+    uint8_t m_g;
+    uint8_t m_b;
 };
 
 } // namespace monsterCatVisualizer

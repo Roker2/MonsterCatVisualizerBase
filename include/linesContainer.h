@@ -9,7 +9,7 @@ namespace monsterCatVisualizer
 class LinesContainer
 {
 public:
-    LinesContainer() = default;
+    LinesContainer(uint8_t r = 255, uint8_t g = 0, uint8_t b = 0);
     virtual ~LinesContainer() = default;
 
     void generateLine(float canvasHeight);
@@ -26,6 +26,9 @@ public:
 
 protected:
     std::vector<Line> m_lines;
+    uint8_t m_r;
+    uint8_t m_g;
+    uint8_t m_b;
 };
 
 } // namespace monsterCatVisualizer

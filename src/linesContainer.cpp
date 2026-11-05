@@ -5,6 +5,11 @@
 
 using namespace monsterCatVisualizer;
 
+LinesContainer::LinesContainer(uint8_t r, uint8_t g, uint8_t b)
+    : m_r(r), m_g(g), m_b(b)
+{
+}
+
 void LinesContainer::generateLine(float canvasHeight)
 {
     float x1 = 0 - (randomFloat() * 100 + 50);
@@ -13,10 +18,9 @@ void LinesContainer::generateLine(float canvasHeight)
     float y1 = minY + (maxY - minY) * randomFloat();
     float length = randomFloat() * 4 + 3;
     float angle = (randomFloat() - 0.5f) * 3.14159f / 4;
-    // red
-    uint8_t r = 255;
-    uint8_t g = 0;
-    uint8_t b = 0;
+    uint8_t r = m_r;
+    uint8_t g = m_g;
+    uint8_t b = m_b;
     float a = 1.f;
     float speed = randomFloat() * 0.5f + 0.2f;
     m_lines.emplace_back(x1, y1, angle, r, g, b, a, speed, length, 2.f);
@@ -53,6 +57,9 @@ void LinesContainer::update(uint32_t deltaTime, float animationSpeed)
 
 void LinesContainer::setColor(uint8_t r, uint8_t g, uint8_t b)
 {
+    m_r = r;
+    m_g = g;
+    m_b = b;
     for (auto& line : m_lines)
     {
         line.setColor(r, g, b);

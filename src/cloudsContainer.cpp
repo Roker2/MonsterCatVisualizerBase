@@ -92,3 +92,9 @@ void CloudsContainer::setColor(uint8_t r, uint8_t g, uint8_t b)
         }
     }
 }
+
+std::vector<Cloud> CloudsContainer::getClouds() const
+{
+    std::lock_guard<std::mutex> lock(m_mutex);
+    return m_clouds;
+}

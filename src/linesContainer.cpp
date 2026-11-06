@@ -82,3 +82,9 @@ void LinesContainer::setColor(uint8_t r, uint8_t g, uint8_t b)
         }
     }
 }
+
+std::vector<Line> LinesContainer::getLines() const
+{
+    std::lock_guard<std::mutex> lock(m_mutex);
+    return m_lines;
+}

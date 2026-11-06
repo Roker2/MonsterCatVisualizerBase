@@ -21,6 +21,7 @@ public:
     void generateParticle(float canvasHeight);
     void cleanUp(float canvasHeight, float canvasWidth);
     void update(uint32_t deltaTime, float animationSpeed);
+    std::vector<Particle> getParticles() const;
 
     virtual void aboutToRemove(const std::vector<size_t>& indices) {};
     virtual void removed() {};
@@ -31,7 +32,7 @@ public:
 
 protected:
     std::vector<Particle> m_particles;
-    std::mutex m_mutex;
+    mutable std::mutex m_mutex;
 };
 
 } // namespace monsterCatVisualizer

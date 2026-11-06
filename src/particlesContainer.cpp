@@ -64,3 +64,9 @@ void ParticlesContainer::update(uint32_t deltaTime, float animationSpeed)
     }
     updated();
 }
+
+std::vector<Particle> ParticlesContainer::getParticles() const
+{
+    std::lock_guard<std::mutex> lock(m_mutex);
+    return m_particles;
+}

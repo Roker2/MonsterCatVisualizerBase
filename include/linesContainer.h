@@ -22,6 +22,7 @@ public:
     void cleanUp(float canvasHeight, float canvasWidth);
     void update(uint32_t deltaTime, float animationSpeed);
     void setColor(uint8_t r, uint8_t g, uint8_t b);
+    std::vector<Line> getLines() const;
 
     virtual void aboutToRemove(const std::vector<size_t>& indices) {};
     virtual void removed() {};
@@ -32,7 +33,7 @@ public:
 
 protected:
     std::vector<Line> m_lines;
-    std::mutex m_mutex;
+    mutable std::mutex m_mutex;
     uint8_t m_r;
     uint8_t m_g;
     uint8_t m_b;

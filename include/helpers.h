@@ -1,3 +1,6 @@
+// Copyright (c) 2026 Dzmitry Minko
+// SPDX-License-Identifier: MIT
+
 #pragma once
 
 #include <random>

@@ -31,7 +31,10 @@ void CloudsContainer::generateCloud(float canvasHeight)
     float a = 0.01f;
     float speedX = randomFloat() * 0.5f + 0.2f;
     float speedY = (randomFloat() - 0.5f) * 0.5f;
-    m_clouds.emplace_back(x, y, radius, r, g, b, a, speedX, speedY, colored);
+    {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        m_clouds.emplace_back(x, y, radius, r, g, b, a, speedX, speedY, colored);
+    }
     cloudIsGenerated();
 }
 
@@ -51,15 +54,21 @@ void CloudsContainer::cleanUp(float canvasHeight, float canvasWidth)
         indicesToRemove.push_back(i);
     }
     aboutToRemove(indicesToRemove);
-    removeIndices(m_clouds, indicesToRemove);
+    {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        removeIndices(m_clouds, indicesToRemove);
+    }
     removed();
 }
 
 void CloudsContainer::update(uint32_t deltaTime, float animationSpeed)
 {
-    for (auto& cloud : m_clouds)
     {
-        cloud.update(deltaTime, animationSpeed);
+        std::lock_guard<std::mutex> lock(m_mutex);
+        for (auto& cloud : m_clouds)
+        {
+            cloud.update(deltaTime, animationSpeed);
+        }
     }
     updated();
 }
@@ -69,9 +78,12 @@ void CloudsContainer::setColor(uint8_t r, uint8_t g, uint8_t b)
     m_r = r;
     m_g = g;
     m_b = b;
-    for (auto& cloud : m_clouds)
     {
-        if (cloud.isColored())
-            cloud.setColor(r, g, b);
+        std::lock_guard<std::mutex> lock(m_mutex);
+        for (auto& cloud : m_clouds)
+        {
+            if (cloud.isColored())
+                cloud.setColor(r, g, b);
+        }
     }
 }

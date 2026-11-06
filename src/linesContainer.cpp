@@ -23,7 +23,10 @@ void LinesContainer::generateLine(float canvasHeight)
     uint8_t b = m_b;
     float a = 1.f;
     float speed = randomFloat() * 0.5f + 0.2f;
-    m_lines.emplace_back(x1, y1, angle, r, g, b, a, speed, length, 2.f);
+    {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        m_lines.emplace_back(x1, y1, angle, r, g, b, a, speed, length, 2.f);
+    }
     lineIsGenerated();
 }
 
@@ -42,15 +45,21 @@ void LinesContainer::cleanUp(float canvasHeight, float canvasWidth)
         indicesToRemove.push_back(i);
     }
     aboutToRemove(indicesToRemove);
-    removeIndices(m_lines, indicesToRemove);
+    {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        removeIndices(m_lines, indicesToRemove);
+    }
     removed();
 }
 
 void LinesContainer::update(uint32_t deltaTime, float animationSpeed)
 {
-    for (auto& line : m_lines)
     {
-        line.update(deltaTime, animationSpeed);
+        std::lock_guard<std::mutex> lock(m_mutex);
+        for (auto& line : m_lines)
+        {
+            line.update(deltaTime, animationSpeed);
+        }
     }
     updated();
 }
@@ -60,8 +69,11 @@ void LinesContainer::setColor(uint8_t r, uint8_t g, uint8_t b)
     m_r = r;
     m_g = g;
     m_b = b;
-    for (auto& line : m_lines)
     {
-        line.setColor(r, g, b);
+        std::lock_guard<std::mutex> lock(m_mutex);
+        for (auto& line : m_lines)
+        {
+            line.setColor(r, g, b);
+        }
     }
 }

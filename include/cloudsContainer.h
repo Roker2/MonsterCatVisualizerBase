@@ -2,6 +2,7 @@
 
 #include "cloud.h"
 #include <vector>
+#include <mutex>
 
 namespace monsterCatVisualizer
 {
@@ -26,6 +27,7 @@ public:
 
 protected:
     std::vector<Cloud> m_clouds;
+    std::mutex m_mutex;
     uint8_t m_r;
     uint8_t m_g;
     uint8_t m_b;

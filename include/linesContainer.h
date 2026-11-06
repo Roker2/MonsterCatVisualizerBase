@@ -2,6 +2,7 @@
 
 #include "line.h"
 #include <vector>
+#include <mutex>
 
 namespace monsterCatVisualizer
 {
@@ -26,6 +27,7 @@ public:
 
 protected:
     std::vector<Line> m_lines;
+    std::mutex m_mutex;
     uint8_t m_r;
     uint8_t m_g;
     uint8_t m_b;

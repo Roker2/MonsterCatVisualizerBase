@@ -18,7 +18,10 @@ void ParticlesContainer::generateParticle(float canvasHeight)
     float a = randomFloat() * 0.5f + 0.2f;
     float speedX = randomFloat() * 0.5f + 0.2f;
     float speedY = (randomFloat() - 0.5f) * 0.5f;
-    m_particles.emplace_back(x, y, radius, r, g, b, a, speedX, speedY);
+    {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        m_particles.emplace_back(x, y, radius, r, g, b, a, speedX, speedY);
+    }
     particleIsGenerated();
 }
 
@@ -38,15 +41,21 @@ void ParticlesContainer::cleanUp(float canvasHeight, float canvasWidth)
         indicesToRemove.push_back(i);
     }
     aboutToRemove(indicesToRemove);
-    removeIndices(m_particles, indicesToRemove);
+    {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        removeIndices(m_particles, indicesToRemove);
+    }
     removed();
 }
 
 void ParticlesContainer::update(uint32_t deltaTime, float animationSpeed)
 {
-    for (auto& particle : m_particles)
     {
-        particle.update(deltaTime, animationSpeed);
+        std::lock_guard<std::mutex> lock(m_mutex);
+        for (auto& particle : m_particles)
+        {
+            particle.update(deltaTime, animationSpeed);
+        }
     }
     updated();
 }

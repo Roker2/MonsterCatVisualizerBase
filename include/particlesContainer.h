@@ -2,6 +2,7 @@
  
 #include "particle.h"
 #include <vector>
+#include <mutex>
 
 namespace monsterCatVisualizer
 {
@@ -25,6 +26,7 @@ public:
 
 protected:
     std::vector<Particle> m_particles;
+    std::mutex m_mutex;
 };
 
 } // namespace monsterCatVisualizer

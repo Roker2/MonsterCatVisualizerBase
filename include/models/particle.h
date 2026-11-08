@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "primitives.h"
+#include "models/primitives.h"
 
 namespace monsterCatVisualizer
 {

@@ -5,19 +5,18 @@
 
 #pragma once
 
-#include "primitives.h"
+#include "models/primitives.h"
 
 namespace monsterCatVisualizer
 {
 
-struct Line
+struct Cloud
 {
     Vector2<> position{};
-    Vector2<> direction{1.0f, 0.0f};
-    float speed{};
-    float length{};
-    float lineWidth{};
+    Vector2<> velocity{};
+    float radius{};
     ColorRGBA<> color{};
+    bool isThemeColored{};
 };
 
 } // namespace monsterCatVisualizer

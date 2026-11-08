@@ -5,34 +5,35 @@
 
 #pragma once
 
-#include "cloud.h"
+#include "line.h"
+
 #include <vector>
 #include <mutex>
 
 namespace monsterCatVisualizer
 {
 
-class CloudsContainer
+class LinesContainer
 {
 public:
-    CloudsContainer(uint8_t r = 255, uint8_t g = 0, uint8_t b = 0);
-    virtual ~CloudsContainer() = default;
+    LinesContainer(uint8_t r = 255, uint8_t g = 0, uint8_t b = 0);
+    virtual ~LinesContainer() = default;
 
-    void generateCloud(float canvasHeight);
+    void generateLine(float canvasHeight);
     void cleanUp(float canvasHeight, float canvasWidth);
     void update(uint32_t deltaTime, float animationSpeed);
     void setColor(uint8_t r, uint8_t g, uint8_t b);
-    std::vector<Cloud> getClouds() const;
+    std::vector<Line> getLines() const;
 
     virtual void aboutToRemove(const std::vector<size_t>& indices) {};
     virtual void removed() {};
 
     virtual void updated() {};
 
-    virtual void cloudIsGenerated() {};
+    virtual void lineIsGenerated() {};
 
 protected:
-    std::vector<Cloud> m_clouds;
+    std::vector<Line> m_lines;
     mutable std::mutex m_mutex;
     uint8_t m_r;
     uint8_t m_g;

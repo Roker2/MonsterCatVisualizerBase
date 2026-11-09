@@ -12,10 +12,19 @@ namespace monsterCatVisualizer
 
 struct Particle
 {
-    Vector2<> position{};
-    Vector2<> velocity{};
-    float radius{};
-    ColorRGBA<> color{};
+    struct GeometryDescriptor
+    {
+        float radius{};
+    };
+
+    struct VisualDescriptor
+    {
+        ColorRGBA<> color{};
+    };
+
+    TrajectoryDescriptor trajectory{};
+    GeometryDescriptor geometry{};
+    VisualDescriptor visual{};
 };
 
 } // namespace monsterCatVisualizer

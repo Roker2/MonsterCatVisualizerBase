@@ -12,11 +12,20 @@ namespace monsterCatVisualizer
 
 struct Cloud
 {
-    Vector2<> position{};
-    Vector2<> velocity{};
-    float radius{};
-    ColorRGBA<> color{};
-    bool isThemeColored{};
+    struct GeometryDescriptor
+    {
+        float radius{};
+    };
+
+    struct VisualDescriptor
+    {
+        ColorRGBA<> color{};
+        bool isThemeColored{};
+    };
+
+    TrajectoryDescriptor trajectory{};
+    GeometryDescriptor geometry{};
+    VisualDescriptor visual{};
 };
 
 } // namespace monsterCatVisualizer

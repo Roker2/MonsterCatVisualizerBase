@@ -12,12 +12,22 @@ namespace monsterCatVisualizer
 
 struct Line
 {
-    Vector2<> position{};
-    Vector2<> direction{1.0f, 0.0f};
-    float speed{};
-    float length{};
-    float lineWidth{};
-    ColorRGBA<> color{};
+    struct GeometryDescriptor
+    {
+        /** Normalized direction along the line. */
+        Vector2<> direction{1.0f, 0.0f};
+        float length{};
+        float lineWidth{};
+    };
+
+    struct VisualDescriptor
+    {
+        ColorRGBA<> color{};
+    };
+
+    TrajectoryDescriptor trajectory{};
+    GeometryDescriptor geometry{};
+    VisualDescriptor visual{};
 };
 
 } // namespace monsterCatVisualizer

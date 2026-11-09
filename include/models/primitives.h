@@ -47,4 +47,13 @@ struct ColorRGBA
     U a{std::is_floating_point_v<U> ? U{1} : std::numeric_limits<U>::max()};
 };
 
+struct TrajectoryDescriptor
+{
+    Vector2<> startPosition{};
+    /** Normalized movement direction. */
+    Vector2<> direction{};
+    float speed{};
+    double startTimeSeconds{};
+};
+
 } // namespace monsterCatVisualizer

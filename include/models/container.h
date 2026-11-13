@@ -53,7 +53,7 @@ public:
 
     bool acquirePatch(PatchStorage& result)
     {
-        result.clear();
+        result.reset();
 
         std::lock_guard<std::mutex> lock(m_mutex);
 

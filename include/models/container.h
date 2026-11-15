@@ -10,7 +10,7 @@
 #include <vector>
 
 #include "utils/typeTraits.h"
-#include "models/primitives.h"
+#include "models/minMax.h"
 #include "operation.h"
 
 namespace monsterCatVisualizer

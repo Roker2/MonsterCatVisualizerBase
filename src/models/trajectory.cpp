@@ -1,4 +1,4 @@
-#include "models/primitives.h"
+#include "models/trajectory.h"
 
 #include "utils/mathUtils.h"
 

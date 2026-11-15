@@ -8,7 +8,9 @@
 #include <cmath>
 
 #include "utils/approximate.h"
-#include "models/primitives.h"
+#include "models/minMax.h"
+#include "models/color.h"
+#include "models/trajectory.h"
 
 namespace monsterCatVisualizer
 {

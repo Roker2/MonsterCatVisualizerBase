@@ -1,6 +1,6 @@
 #pragma once
 
-#include "models/primitives.h"
+#include "models/vector2.h"
 
 namespace monsterCatVisualizer::utils
 {

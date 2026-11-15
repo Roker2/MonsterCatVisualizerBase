@@ -11,6 +11,8 @@
 #include "utils/approximate.h"
 #include "utils/typeTraits.h"
 
+// TODO: decompose header into several .h
+
 namespace monsterCatVisualizer
 {
 
@@ -51,6 +53,7 @@ constexpr bool operator!=(const MinMax<T>& lhs, const MinMax<T>& rhs) noexcept
 {
     return !(lhs == rhs);
 }
+
 
 template <typename T = float>
 struct Vector2
@@ -143,6 +146,7 @@ struct Vector2
     T y{};
 };
 
+
 template <typename T = std::uint8_t>
 struct ColorRGB
 {
@@ -173,6 +177,24 @@ struct ColorRGB
     T g{};
     T b{};
 };
+
+inline constexpr std::uint32_t packColor(ColorRGB<> color) noexcept
+{
+    return (static_cast<std::uint32_t>(color.r) << 16u) |
+        (static_cast<std::uint32_t>(color.g) << 8u) |
+        static_cast<std::uint32_t>(color.b);
+}
+
+inline constexpr ColorRGB<> unpackColor(std::uint32_t color) noexcept
+{
+    return ColorRGB<>
+    {
+        static_cast<std::uint8_t>((color >> 16u) & 0xffu),
+        static_cast<std::uint8_t>((color >> 8u) & 0xffu),
+        static_cast<std::uint8_t>(color & 0xffu)
+    };
+}
+
 
 template <typename T = std::uint8_t, typename U = float>
 struct ColorRGBA
@@ -214,6 +236,7 @@ struct ColorRGBA
     T b{};
     U a{std::is_floating_point_v<U> ? U{1} : std::numeric_limits<U>::max()};
 };
+
 
 struct TrajectoryDescriptor
 {

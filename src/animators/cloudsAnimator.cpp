@@ -33,6 +33,7 @@ CloudsAnimator::GenerationDescriptor::GenerationDescriptor(
         cloudGenerationDescriptor.speed.min,
         cloudGenerationDescriptor.speed.max
     };
+
     radius = DistF
     {
         cloudGenerationDescriptor.radius.min,
@@ -62,6 +63,7 @@ CloudsAnimator::GenerationDescriptor::GenerationDescriptor(
 
     themeColorProbability = cloudGenerationDescriptor.themeColorProbability;
 }
+
 
 CloudsAnimator::CloudsAnimator(StoragePtr storagePtr,
     ColorRGB<> themeColor,
@@ -107,7 +109,7 @@ void CloudsAnimator::update(double timeSeconds,
 {
     if (m_storagePtr->hasPatch())
         return;
-    return BaseAnimator::update(timeSeconds, viewportWidth, viewportHeight);
+    BaseAnimator::update(timeSeconds, viewportWidth, viewportHeight);
 }
 
 std::size_t CloudsAnimator::calculateDesiredCount(float viewportWidth, float viewportHeight) const
@@ -159,6 +161,7 @@ void CloudsAnimator::appendElements(double timeSeconds, std::size_t desiredCount
 Cloud CloudsAnimator::generateCloud(double startTimeSeconds)
 {
     const float angle = m_generationDescriptor.angle(m_rng);
+    const Vector2<> direction{std::cos(angle), std::sin(angle)};
     const bool isThemeColored = m_generationDescriptor.themeColor(m_rng) <
         m_generationDescriptor.themeColorProbability;
     const auto color = isThemeColored ? ColorRGBA<>{}
@@ -179,17 +182,13 @@ Cloud CloudsAnimator::generateCloud(double startTimeSeconds)
                 m_generationDescriptor.position(m_rng),
                 m_generationDescriptor.position(m_rng)
             },
-            Vector2<>
-            {
-                std::cos(angle),
-                std::sin(angle)
-            },
+            direction,
             m_generationDescriptor.speed(m_rng),
             startTimeSeconds
         },
         GeometryDescriptor
         {
-            m_generationDescriptor.radius(m_rng),
+            m_generationDescriptor.radius(m_rng)
         },
         VisualDescriptor
         {

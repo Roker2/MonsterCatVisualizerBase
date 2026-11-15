@@ -26,9 +26,9 @@ struct Patch
         clearFlag = false;
     }
 
+    bool clearFlag{};
     std::vector<OperationRemove> removeOperations;
     std::vector<T> appended;
-    bool clearFlag{};
 };
 
 template <typename Container>

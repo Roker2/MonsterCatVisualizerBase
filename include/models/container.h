@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <cmath>
 #include <cstddef>
 #include <algorithm>
 #include <mutex>
@@ -9,6 +10,7 @@
 #include <vector>
 
 #include "utils/typeTraits.h"
+#include "models/primitives.h"
 #include "operation.h"
 
 namespace monsterCatVisualizer
@@ -22,7 +24,14 @@ class Container
 
 public:
     static constexpr std::size_t defaultPatchRemoveOperationsCapacity = 512ull;
-    static constexpr float defaultPatchAppendedCapacityCoefficient = 0.5f;
+    static constexpr float defaultPatchAppendedCapacityCoefficient = 0.2f;
+    static constexpr MinMax<float> patchAppendedCapacityCoefficientValidator{0.01f, 1.0f};
+
+    std::size_t getDataSize() const
+    {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        return m_data.size();
+    }
 
     void getData(DataStorage& result) const
     {
@@ -76,9 +85,14 @@ public:
         m_data.reserve(capacity);
         if (reservePatch)
         {
+            patchAppendedCapacityCoefficient = std::clamp(
+                patchAppendedCapacityCoefficient,
+                patchAppendedCapacityCoefficientValidator.min,
+                patchAppendedCapacityCoefficientValidator.max);
+            const std::size_t patchAppendedCapacity = static_cast<std::size_t>(std::ceil(
+                capacity * patchAppendedCapacityCoefficient));
             m_patch.removeOperations.reserve(patchRemoveOperationsCapacity);
-            m_patch.appended.reserve(static_cast<std::size_t>(
-                capacity * std::clamp(patchAppendedCapacityCoefficient, 0.01f, 1.0f)));
+            m_patch.appended.reserve(patchAppendedCapacity);
         }
     }
 
@@ -118,7 +132,7 @@ public:
     template <typename P>
     bool removeIf(P&& predicate)
     {
-        if constexpr (utils::is_null_comparable<P>::value)
+        if constexpr (utils::is_null_comparable_v<P>)
         {
             if (predicate == nullptr)
                 return false;

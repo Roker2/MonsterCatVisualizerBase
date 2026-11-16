@@ -5,7 +5,7 @@
 #include <chrono>
 #include <mutex>
 
-#include "models/minMax.h"
+#include "primitives/minMax.h"
 
 namespace monsterCatVisualizer::utils
 {
@@ -21,7 +21,7 @@ public:
         bool paused{};
     };
 
-    static constexpr MinMax<double> multiplierMinMax{0.01, 100.0};
+    static constexpr primitives::MinMax<double> multiplierMinMax{0.01, 100.0};
     static constexpr double defaultSpeedMultiplier{1.0};
 
     TimeSample getTimeSample() const;

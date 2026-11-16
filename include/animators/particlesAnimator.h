@@ -10,13 +10,16 @@
 #include "animators/containerAnimator.h"
 #include "models/particle.h"
 
-namespace monsterCatVisualizer
+namespace monsterCatVisualizer::animators
 {
 
-class ParticlesAnimator : public ContainerAnimator<Particle>
+class ParticlesAnimator : public ContainerAnimator<models::Particle>
 {
 public:
     static constexpr std::size_t appendLimit = 250;
+
+    using ParticleGenerationDescriptor = models::ParticleGenerationDescriptor;
+    using Particle = models::Particle;
 
     struct GenerationDescriptor
     {
@@ -46,4 +49,4 @@ protected:
     GenerationDescriptor m_generationDescriptor;
 };
 
-} // namespace monsterCatVisualizer
+} // namespace monsterCatVisualizer::animators

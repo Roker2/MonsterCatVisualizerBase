@@ -15,21 +15,22 @@
 #include <vector>
 
 #include "animators/baseAnimator.h"
-#include "models/color.h"
+#include "primitives/color.h"
+#include "primitives/vector2.h"
 #include "models/container.h"
 #include "models/trajectory.h"
 #include "utils/approximate.h"
 #include "utils/defines.h"
 #include "utils/mathUtils.h"
 
-namespace monsterCatVisualizer
+namespace monsterCatVisualizer::animators
 {
 
 template <typename T>
 class ContainerAnimator : public BaseAnimator
 {
 public:
-    using Storage = Container<T>;
+    using Storage = models::Container<T>;
     using StoragePtr = std::shared_ptr<Storage>;
 
     StoragePtr getStorage() const
@@ -148,11 +149,11 @@ protected:
 
     virtual T generateElement(double startTimeSeconds) = 0;
 
-    TrajectoryDescriptor generateTrajectory(double startTimeSeconds, Vector2<> direction)
+    models::TrajectoryDescriptor generateTrajectory(double startTimeSeconds, primitives::Vector2<> direction)
     {
-        return TrajectoryDescriptor
+        return models::TrajectoryDescriptor
         {
-            Vector2<>
+            primitives::Vector2<>
             {
                 m_sharedGenerationDescriptor.position(m_rng),
                 m_sharedGenerationDescriptor.position(m_rng)
@@ -163,15 +164,15 @@ protected:
         };
     }
 
-    Vector2<> generateDirection()
+    primitives::Vector2<> generateDirection()
     {
         const float angle = m_sharedGenerationDescriptor.angle(m_rng);
-        return Vector2<>{std::cos(angle), std::sin(angle)};
+        return primitives::Vector2<>{std::cos(angle), std::sin(angle)};
     }
 
-    ColorRGBA<> generateColor()
+    primitives::ColorRGBA<> generateColor()
     {
-        return ColorRGBA<>
+        return primitives::ColorRGBA<>
         {
             static_cast<std::uint8_t>(m_sharedGenerationDescriptor.colorR(m_rng)),
             static_cast<std::uint8_t>(m_sharedGenerationDescriptor.colorG(m_rng)),
@@ -184,4 +185,4 @@ protected:
     SharedGenerationDescriptor m_sharedGenerationDescriptor;
 };
 
-} // namespace monsterCatVisualizer
+} // namespace monsterCatVisualizer::animators

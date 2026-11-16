@@ -5,7 +5,7 @@
 
 #include "animators/particlesAnimator.h"
 
-namespace monsterCatVisualizer
+namespace monsterCatVisualizer::animators
 {
 
 ParticlesAnimator::GenerationDescriptor::GenerationDescriptor(
@@ -34,10 +34,10 @@ void ParticlesAnimator::appendElements(double timeSeconds, std::size_t desiredCo
     appendGeneratedElements(timeSeconds, desiredCount, appendLimit);
 }
 
-Particle ParticlesAnimator::generateElement(double startTimeSeconds)
+ParticlesAnimator::Particle ParticlesAnimator::generateElement(double startTimeSeconds)
 {
-    const Vector2<> direction = generateDirection();
-    const ColorRGBA<> color = generateColor();
+    const primitives::Vector2<> direction = generateDirection();
+    const primitives::ColorRGBA<> color = generateColor();
 
     return Particle
     {
@@ -53,4 +53,4 @@ Particle ParticlesAnimator::generateElement(double startTimeSeconds)
     };
 }
 
-} // namespace monsterCatVisualizer
+} // namespace monsterCatVisualizer::animators

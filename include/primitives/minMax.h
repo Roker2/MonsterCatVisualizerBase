@@ -7,7 +7,7 @@
 #include "utils/approximate.h"
 #include "utils/typeTraits.h"
 
-namespace monsterCatVisualizer
+namespace monsterCatVisualizer::primitives
 {
 
 template <typename T>
@@ -48,4 +48,4 @@ constexpr bool operator!=(const MinMax<T>& lhs, const MinMax<T>& rhs) noexcept
     return !(lhs == rhs);
 }
 
-} // namespace monsterCatVisualizer
+} // namespace monsterCatVisualizer::primitives

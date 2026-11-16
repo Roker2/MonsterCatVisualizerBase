@@ -5,7 +5,7 @@
 
 #include "animators/cloudsAnimator.h"
 
-namespace monsterCatVisualizer
+namespace monsterCatVisualizer::animators
 {
 
 CloudsAnimator::GenerationDescriptor::GenerationDescriptor(
@@ -15,7 +15,7 @@ CloudsAnimator::GenerationDescriptor::GenerationDescriptor(
 {
 }
 
-CloudsAnimator::CloudsAnimator(ColorRGB<> themeColor,
+CloudsAnimator::CloudsAnimator(primitives::ColorRGB<> themeColor,
     StoragePtr storagePtr,
     const CloudGenerationDescriptor& cloudGenerationDescriptor)
     : ContainerAnimator<Cloud>(std::move(storagePtr), cloudGenerationDescriptor),
@@ -24,14 +24,14 @@ CloudsAnimator::CloudsAnimator(ColorRGB<> themeColor,
 {
 }
 
-ColorRGB<> CloudsAnimator::getThemeColor() const
+primitives::ColorRGB<> CloudsAnimator::getThemeColor() const
 {
-    return unpackColor(m_themeColor.load(std::memory_order_relaxed));
+    return primitives::unpackColor(m_themeColor.load(std::memory_order_relaxed));
 }
 
-void CloudsAnimator::setThemeColor(ColorRGB<> themeColor)
+void CloudsAnimator::setThemeColor(primitives::ColorRGB<> themeColor)
 {
-    m_themeColor.store(packColor(themeColor.getNormalized()), std::memory_order_relaxed);
+    m_themeColor.store(primitives::packColor(themeColor.getNormalized()), std::memory_order_relaxed);
 }
 
 void CloudsAnimator::removeElements(double timeSeconds,
@@ -47,13 +47,13 @@ void CloudsAnimator::appendElements(double timeSeconds, std::size_t desiredCount
     appendGeneratedElements(timeSeconds, desiredCount, appendLimit);
 }
 
-Cloud CloudsAnimator::generateElement(double startTimeSeconds)
+CloudsAnimator::Cloud CloudsAnimator::generateElement(double startTimeSeconds)
 {
-    const Vector2<> direction = generateDirection();
+    const primitives::Vector2<> direction = generateDirection();
     const bool isThemeColored = m_generationDescriptor.themeColor(m_rng) <
         m_generationDescriptor.themeColorProbability;
 
-    ColorRGBA<> color{};
+    primitives::ColorRGBA<> color{};
     if (isThemeColored)
         color.a = m_sharedGenerationDescriptor.colorA(m_rng);
     else
@@ -74,4 +74,4 @@ Cloud CloudsAnimator::generateElement(double startTimeSeconds)
     };
 }
 
-} // namespace monsterCatVisualizer
+} // namespace monsterCatVisualizer::animators

@@ -8,17 +8,17 @@
 #include <cmath>
 
 #include "utils/approximate.h"
-#include "models/minMax.h"
-#include "models/color.h"
+#include "primitives/minMax.h"
+#include "primitives/color.h"
 #include "models/trajectory.h"
 
-namespace monsterCatVisualizer
+namespace monsterCatVisualizer::models
 {
 
 struct LineGenerationDescriptor
 {
     static constexpr float elementsDensityMin = 1.0f;
-    static constexpr MinMax<float> floatValidator{0.0f, 1.0f};
+    static constexpr primitives::MinMax<float> floatValidator{0.0f, 1.0f};
 
     bool isValid() const
     {
@@ -45,10 +45,10 @@ struct LineGenerationDescriptor
 
     float elementsDensity{};
 
-    MinMax<float> speed{};
-    MinMax<float> length{};
+    primitives::MinMax<float> speed{};
+    primitives::MinMax<float> length{};
     float lineWidth{};
-    MinMax<ColorRGBA<>> color{};
+    primitives::MinMax<primitives::ColorRGBA<>> color{};
 };
 
 struct Line
@@ -56,14 +56,14 @@ struct Line
     struct GeometryDescriptor
     {
         /** Normalized direction along the line in NSS. */
-        Vector2<> direction{1.0f, 0.0f};
+        primitives::Vector2<> direction{1.0f, 0.0f};
         float length{};
         float lineWidth{};
     };
 
     struct VisualDescriptor
     {
-        ColorRGBA<> color{};
+        primitives::ColorRGBA<> color{};
     };
 
     TrajectoryDescriptor trajectory{};
@@ -71,4 +71,4 @@ struct Line
     VisualDescriptor visual{};
 };
 
-} // namespace monsterCatVisualizer
+} // namespace monsterCatVisualizer::models

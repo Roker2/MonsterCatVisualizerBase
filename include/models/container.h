@@ -10,10 +10,10 @@
 #include <vector>
 
 #include "utils/typeTraits.h"
-#include "models/minMax.h"
+#include "primitives/minMax.h"
 #include "operation.h"
 
-namespace monsterCatVisualizer
+namespace monsterCatVisualizer::models
 {
 
 template <typename T>
@@ -25,7 +25,7 @@ class Container
 public:
     static constexpr std::size_t defaultPatchRemoveOperationsCapacity = 512ull;
     static constexpr float defaultPatchAppendedCapacityCoefficient = 0.2f;
-    static constexpr MinMax<float> patchAppendedCapacityCoefficientValidator{0.01f, 1.0f};
+    static constexpr primitives::MinMax<float> patchAppendedCapacityCoefficientValidator{0.01f, 1.0f};
 
     std::size_t getDataSize() const
     {
@@ -218,4 +218,4 @@ private:
     mutable std::mutex m_mutex;
 };
 
-} // namespace monsterCatVisualizer
+} // namespace monsterCatVisualizer::models

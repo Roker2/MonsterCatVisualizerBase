@@ -7,7 +7,7 @@
 #include <limits>
 #include <type_traits>
 
-namespace monsterCatVisualizer
+namespace monsterCatVisualizer::primitives
 {
 
 template <typename T = std::uint8_t>
@@ -100,4 +100,4 @@ struct ColorRGBA
     U a{std::is_floating_point_v<U> ? U{1} : std::numeric_limits<U>::max()};
 };
 
-} // namespace monsterCatVisualizer
+} // namespace monsterCatVisualizer::primitives

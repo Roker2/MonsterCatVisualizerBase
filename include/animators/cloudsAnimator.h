@@ -12,13 +12,16 @@
 #include "animators/containerAnimator.h"
 #include "models/cloud.h"
 
-namespace monsterCatVisualizer
+namespace monsterCatVisualizer::animators
 {
 
-class CloudsAnimator : public ContainerAnimator<Cloud>
+class CloudsAnimator : public ContainerAnimator<models::Cloud>
 {
 public:
     static constexpr std::size_t appendLimit = 10;
+
+    using CloudGenerationDescriptor = models::CloudGenerationDescriptor;
+    using Cloud = models::Cloud;
 
     struct GenerationDescriptor
     {
@@ -37,12 +40,12 @@ public:
     using StoragePtr = ContainerAnimator<Cloud>::StoragePtr;
     using ThemeColorStorage = std::atomic<std::uint32_t>;
 
-    CloudsAnimator(ColorRGB<> themeColor,
+    CloudsAnimator(primitives::ColorRGB<> themeColor,
         StoragePtr storagePtr,
         const CloudGenerationDescriptor& cloudGenerationDescriptor);
 
-    ColorRGB<> getThemeColor() const;
-    void setThemeColor(ColorRGB<> themeColor);
+    primitives::ColorRGB<> getThemeColor() const;
+    void setThemeColor(primitives::ColorRGB<> themeColor);
 
 protected:
     void removeElements(double timeSeconds,
@@ -56,4 +59,4 @@ protected:
     GenerationDescriptor m_generationDescriptor;
 };
 
-} // namespace monsterCatVisualizer
+} // namespace monsterCatVisualizer::animators

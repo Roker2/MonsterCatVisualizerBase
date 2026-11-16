@@ -2,7 +2,7 @@
 
 #include "animators/baseAnimator.h"
 
-namespace monsterCatVisualizer
+namespace monsterCatVisualizer::animators
 {
 
 void BaseAnimator::initialize(float viewportWidth,
@@ -21,4 +21,4 @@ void BaseAnimator::update(double timeSeconds,
     appendElements(timeSeconds, desiredCount);
 }
 
-} // namespace monsterCatVisualizer
+} // namespace monsterCatVisualizer::animators

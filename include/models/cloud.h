@@ -8,17 +8,17 @@
 #include <cmath>
 
 #include "utils/approximate.h"
-#include "models/minMax.h"
-#include "models/color.h"
+#include "primitives/minMax.h"
+#include "primitives/color.h"
 #include "models/trajectory.h"
 
-namespace monsterCatVisualizer
+namespace monsterCatVisualizer::models
 {
 
 struct CloudGenerationDescriptor
 {
     static constexpr float elementsDensityMin = 1.0f;
-    static constexpr MinMax<float> floatValidator{0.0f, 1.0f};
+    static constexpr primitives::MinMax<float> floatValidator{0.0f, 1.0f};
 
     bool isValid() const
     {
@@ -46,9 +46,9 @@ struct CloudGenerationDescriptor
 
     float elementsDensity{};
 
-    MinMax<float> speed{};
-    MinMax<float> radius{};
-    MinMax<ColorRGBA<>> color{};
+    primitives::MinMax<float> speed{};
+    primitives::MinMax<float> radius{};
+    primitives::MinMax<primitives::ColorRGBA<>> color{};
     float themeColorProbability{};
 };
 
@@ -61,7 +61,7 @@ struct Cloud
 
     struct VisualDescriptor
     {
-        ColorRGBA<> color{};
+        primitives::ColorRGBA<> color{};
         bool isThemeColored{};
     };
 
@@ -70,4 +70,4 @@ struct Cloud
     VisualDescriptor visual{};
 };
 
-} // namespace monsterCatVisualizer
+} // namespace monsterCatVisualizer::models

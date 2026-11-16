@@ -7,7 +7,7 @@
 #include <utility>
 #include <vector>
 
-namespace monsterCatVisualizer
+namespace monsterCatVisualizer::models
 {
 
 struct OperationRemove
@@ -89,4 +89,4 @@ bool applyPatch(Container& data, Patch<T>&& patch)
     return true;
 }
 
-} // namespace monsterCatVisualizer
+} // namespace monsterCatVisualizer::models

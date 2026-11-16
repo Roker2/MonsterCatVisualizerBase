@@ -7,7 +7,7 @@
 
 #include "utils/approximate.h"
 
-namespace monsterCatVisualizer
+namespace monsterCatVisualizer::primitives
 {
 
 template <typename T = float>
@@ -101,4 +101,4 @@ struct Vector2
     T y{};
 };
 
-} // namespace monsterCatVisualizer
+} // namespace monsterCatVisualizer::primitives

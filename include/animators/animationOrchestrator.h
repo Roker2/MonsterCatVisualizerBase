@@ -13,7 +13,7 @@
 #include "utils/taskScheduler.h"
 #include "animators/baseAnimator.h"
 
-namespace monsterCatVisualizer
+namespace monsterCatVisualizer::animators
 {
 
 class AnimationOrchestrator
@@ -53,4 +53,4 @@ private:
     ViewportStatePtr m_viewportState;
 };
 
-} // namespace monsterCatVisualizer
+} // namespace monsterCatVisualizer::animators

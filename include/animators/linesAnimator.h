@@ -10,13 +10,16 @@
 #include "animators/containerAnimator.h"
 #include "models/line.h"
 
-namespace monsterCatVisualizer
+namespace monsterCatVisualizer::animators
 {
 
-class LinesAnimator : public ContainerAnimator<Line>
+class LinesAnimator : public ContainerAnimator<models::Line>
 {
 public:
     static constexpr std::size_t appendLimit = 25;
+
+    using LineGenerationDescriptor = models::LineGenerationDescriptor;
+    using Line = models::Line;
 
     struct GenerationDescriptor
     {
@@ -47,4 +50,4 @@ protected:
     GenerationDescriptor m_generationDescriptor;
 };
 
-} // namespace monsterCatVisualizer
+} // namespace monsterCatVisualizer::animators

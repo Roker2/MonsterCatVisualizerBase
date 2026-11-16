@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 #include "utils/mathUtils.h"
 
 #include <algorithm>
@@ -10,7 +12,8 @@
 namespace monsterCatVisualizer::utils
 {
 
-Vector2<> SpatialMathUtils::convertNVSToNSS(Vector2<> position,
+primitives::Vector2<> SpatialMathUtils::convertNVSToNSS(
+    primitives::Vector2<> position,
     float viewportWidth,
     float viewportHeight)
 {
@@ -18,7 +21,8 @@ Vector2<> SpatialMathUtils::convertNVSToNSS(Vector2<> position,
         viewportToRatio(viewportWidth, viewportHeight));
 }
 
-Vector2<> SpatialMathUtils::convertNVSToNSS(Vector2<> position,
+primitives::Vector2<> SpatialMathUtils::convertNVSToNSS(
+    primitives::Vector2<> position,
     float viewportRatio)
 {
     if (!std::isfinite(viewportRatio) || Approximate::lessEqualZero(viewportRatio))
@@ -26,12 +30,13 @@ Vector2<> SpatialMathUtils::convertNVSToNSS(Vector2<> position,
 
     if (viewportRatio >= 1.0f)
     {
-        return Vector2<>{ position.x, position.y / viewportRatio };
+        return primitives::Vector2<>{ position.x, position.y / viewportRatio };
     }
-    return Vector2<>{ position.x * viewportRatio, position.y };
+    return primitives::Vector2<>{ position.x * viewportRatio, position.y };
 }
 
-Vector2<> SpatialMathUtils::convertNSSToNVS(Vector2<> position,
+primitives::Vector2<> SpatialMathUtils::convertNSSToNVS(
+    primitives::Vector2<> position,
     float viewportWidth,
     float viewportHeight)
 {
@@ -39,7 +44,8 @@ Vector2<> SpatialMathUtils::convertNSSToNVS(Vector2<> position,
         viewportToRatio(viewportWidth, viewportHeight));
 }
 
-Vector2<> SpatialMathUtils::convertNSSToNVS(Vector2<> position,
+primitives::Vector2<> SpatialMathUtils::convertNSSToNVS(
+    primitives::Vector2<> position,
     float viewportRatio)
 {
     if (!std::isfinite(viewportRatio) || Approximate::lessEqualZero(viewportRatio))
@@ -47,9 +53,9 @@ Vector2<> SpatialMathUtils::convertNSSToNVS(Vector2<> position,
 
     if (viewportRatio >= 1.0f)
     {
-        return Vector2<>{ position.x, position.y * viewportRatio };
+        return primitives::Vector2<>{ position.x, position.y * viewportRatio };
     }
-    return Vector2<>{ position.x / viewportRatio, position.y };
+    return primitives::Vector2<>{ position.x / viewportRatio, position.y };
 }
 
 float SpatialMathUtils::viewportToRatio(float viewportWidth,

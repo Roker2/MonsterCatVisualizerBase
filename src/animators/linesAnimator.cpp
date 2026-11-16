@@ -5,7 +5,7 @@
 
 #include "animators/linesAnimator.h"
 
-namespace monsterCatVisualizer
+namespace monsterCatVisualizer::animators
 {
 
 LinesAnimator::GenerationDescriptor::GenerationDescriptor(
@@ -38,10 +38,10 @@ void LinesAnimator::appendElements(double timeSeconds, std::size_t desiredCount)
     appendGeneratedElements(timeSeconds, desiredCount, appendLimit);
 }
 
-Line LinesAnimator::generateElement(double startTimeSeconds)
+LinesAnimator::Line LinesAnimator::generateElement(double startTimeSeconds)
 {
-    const Vector2<> direction = generateDirection();
-    const ColorRGBA<> color = generateColor();
+    const primitives::Vector2<> direction = generateDirection();
+    const primitives::ColorRGBA<> color = generateColor();
 
     return Line
     {
@@ -59,4 +59,4 @@ Line LinesAnimator::generateElement(double startTimeSeconds)
     };
 }
 
-} // namespace monsterCatVisualizer
+} // namespace monsterCatVisualizer::animators

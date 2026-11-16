@@ -1,6 +1,6 @@
 #pragma once
 
-#include "models/vector2.h"
+#include "primitives/vector2.h"
 
 namespace monsterCatVisualizer::utils
 {
@@ -14,19 +14,23 @@ struct SpatialMathUtils
     // The viewport ratio must be finite and positive.
 
     /** Convert position from NVS to NSS */
-    static Vector2<> convertNVSToNSS(Vector2<> positionNVS,
+    static primitives::Vector2<> convertNVSToNSS(
+        primitives::Vector2<> positionNVS,
         float viewportWidth,
         float viewportHeight);
     /** Convert position from NVS to NSS */
-    static Vector2<> convertNVSToNSS(Vector2<> positionNVS,
+    static primitives::Vector2<> convertNVSToNSS(
+        primitives::Vector2<> positionNVS,
         float viewportRatio);
 
     /** Convert position from NSS to NVS */
-    static Vector2<> convertNSSToNVS(Vector2<> positionNSS,
+    static primitives::Vector2<> convertNSSToNVS(
+        primitives::Vector2<> positionNSS,
         float viewportWidth,
         float viewportHeight);
     /** Convert position from NSS to NVS */
-    static Vector2<> convertNSSToNVS(Vector2<> positionNSS,
+    static primitives::Vector2<> convertNSSToNVS(
+        primitives::Vector2<> positionNSS,
         float viewportRatio);
 
     static float viewportToRatio(float viewportWidth,

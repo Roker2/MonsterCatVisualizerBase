@@ -4,6 +4,7 @@
 #include <cmath>
 #include <stdexcept>
 
+#include "utils/defines.h"
 #include "utils/approximate.h"
 
 namespace monsterCatVisualizer::utils
@@ -54,13 +55,20 @@ Vector2<> SpatialMathUtils::convertNSSToNVS(Vector2<> position,
 float SpatialMathUtils::viewportToRatio(float viewportWidth,
     float viewportHeight)
 {
-    if (!std::isfinite(viewportWidth) || !std::isfinite(viewportHeight) ||
-        Approximate::lessEqualZero(viewportWidth) ||
-        Approximate::lessEqualZero(viewportHeight))
+    if (!viewportSizeValid(viewportWidth, viewportHeight))
         throw std::invalid_argument("SpatialMathUtils: invalid viewport size");
 
     return std::max(viewportWidth, minViewportSide) /
         std::max(viewportHeight, minViewportSide);
+}
+
+bool SpatialMathUtils::viewportSizeValid(float viewportWidth,
+    float viewportHeight)
+{
+    return std::isfinite(viewportWidth) &&
+        std::isfinite(viewportHeight) &&
+        Approximate::greaterZero(viewportWidth) &&
+        Approximate::greaterZero(viewportHeight);
 }
 
 } // namespace monsterCatVisualizer::utils

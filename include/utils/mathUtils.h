@@ -31,6 +31,8 @@ struct SpatialMathUtils
 
     static float viewportToRatio(float viewportWidth,
         float viewportHeight);
+    static bool viewportSizeValid(float viewportWidth,
+        float viewportHeight);
 };
 
 } // namespace monsterCatVisualizer::utils

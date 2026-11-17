@@ -7,10 +7,10 @@
 
 #include <random>
 
-#include "animators/containerAnimator.h"
+#include "animation/containerAnimator.h"
 #include "models/line.h"
 
-namespace monsterCatVisualizer::animators
+namespace monsterCatVisualizer::animation
 {
 
 class LinesAnimator : public ContainerAnimator<models::Line>
@@ -50,4 +50,4 @@ protected:
     GenerationDescriptor m_generationDescriptor;
 };
 
-} // namespace monsterCatVisualizer::animators
+} // namespace monsterCatVisualizer::animation

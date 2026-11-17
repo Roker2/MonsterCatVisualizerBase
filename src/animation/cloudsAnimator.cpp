@@ -3,9 +3,9 @@
 // Copyright (c) 2026 Dzmitry Minko
 // SPDX-License-Identifier: MIT
 
-#include "animators/cloudsAnimator.h"
+#include "animation/cloudsAnimator.h"
 
-namespace monsterCatVisualizer::animators
+namespace monsterCatVisualizer::animation
 {
 
 CloudsAnimator::GenerationDescriptor::GenerationDescriptor(
@@ -74,4 +74,4 @@ CloudsAnimator::Cloud CloudsAnimator::generateElement(double startTimeSeconds)
     };
 }
 
-} // namespace monsterCatVisualizer::animators
+} // namespace monsterCatVisualizer::animation

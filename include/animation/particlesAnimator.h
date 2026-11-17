@@ -7,10 +7,10 @@
 
 #include <random>
 
-#include "animators/containerAnimator.h"
+#include "animation/containerAnimator.h"
 #include "models/particle.h"
 
-namespace monsterCatVisualizer::animators
+namespace monsterCatVisualizer::animation
 {
 
 class ParticlesAnimator : public ContainerAnimator<models::Particle>
@@ -49,4 +49,4 @@ protected:
     GenerationDescriptor m_generationDescriptor;
 };
 
-} // namespace monsterCatVisualizer::animators
+} // namespace monsterCatVisualizer::animation

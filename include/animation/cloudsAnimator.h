@@ -9,10 +9,10 @@
 #include <cstdint>
 #include <random>
 
-#include "animators/containerAnimator.h"
+#include "animation/containerAnimator.h"
 #include "models/cloud.h"
 
-namespace monsterCatVisualizer::animators
+namespace monsterCatVisualizer::animation
 {
 
 class CloudsAnimator : public ContainerAnimator<models::Cloud>
@@ -59,4 +59,4 @@ protected:
     GenerationDescriptor m_generationDescriptor;
 };
 
-} // namespace monsterCatVisualizer::animators
+} // namespace monsterCatVisualizer::animation

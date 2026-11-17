@@ -5,7 +5,7 @@
 #include <cstddef>
 #include <random>
 
-namespace monsterCatVisualizer::animators
+namespace monsterCatVisualizer::animation
 {
 
 class BaseAnimator
@@ -32,4 +32,4 @@ protected:
     std::mt19937 m_rng{std::random_device{}()};
 };
 
-} // namespace monsterCatVisualizer::animators
+} // namespace monsterCatVisualizer::animation

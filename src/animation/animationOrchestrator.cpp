@@ -3,7 +3,7 @@
 // Copyright (c) 2026 Dzmitry Minko
 // SPDX-License-Identifier: MIT
 
-#include "animators/animationOrchestrator.h"
+#include "animation/animationOrchestrator.h"
 
 #include <algorithm>
 #include <stdexcept>
@@ -16,7 +16,7 @@ namespace
     constexpr std::size_t threadsCount = 3ull;
 }
 
-namespace monsterCatVisualizer::animators
+namespace monsterCatVisualizer::animation
 {
 
 AnimationOrchestrator::AnimationOrchestrator(AnimationClockPtr animationClock,
@@ -106,4 +106,4 @@ void AnimationOrchestrator::removeAllAnimators()
     m_animators.clear();
 }
 
-} // namespace monsterCatVisualizer::animators
+} // namespace monsterCatVisualizer::animation

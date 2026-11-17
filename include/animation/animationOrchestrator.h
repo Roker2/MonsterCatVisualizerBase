@@ -11,9 +11,9 @@
 #include "utils/animationClock.h"
 #include "utils/viewportState.h"
 #include "utils/taskScheduler.h"
-#include "animators/baseAnimator.h"
+#include "animation/baseAnimator.h"
 
-namespace monsterCatVisualizer::animators
+namespace monsterCatVisualizer::animation
 {
 
 class AnimationOrchestrator

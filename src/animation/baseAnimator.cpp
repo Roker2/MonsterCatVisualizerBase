@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 
-#include "animators/baseAnimator.h"
+#include "animation/baseAnimator.h"
 
-namespace monsterCatVisualizer::animators
+namespace monsterCatVisualizer::animation
 {
 
 void BaseAnimator::initialize(float viewportWidth,
@@ -21,4 +21,4 @@ void BaseAnimator::update(double timeSeconds,
     appendElements(timeSeconds, desiredCount);
 }
 
-} // namespace monsterCatVisualizer::animators
+} // namespace monsterCatVisualizer::animation

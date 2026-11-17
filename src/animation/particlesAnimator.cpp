@@ -3,9 +3,9 @@
 // Copyright (c) 2026 Dzmitry Minko
 // SPDX-License-Identifier: MIT
 
-#include "animators/particlesAnimator.h"
+#include "animation/particlesAnimator.h"
 
-namespace monsterCatVisualizer::animators
+namespace monsterCatVisualizer::animation
 {
 
 ParticlesAnimator::GenerationDescriptor::GenerationDescriptor(
@@ -53,4 +53,4 @@ ParticlesAnimator::Particle ParticlesAnimator::generateElement(double startTimeS
     };
 }
 
-} // namespace monsterCatVisualizer::animators
+} // namespace monsterCatVisualizer::animation

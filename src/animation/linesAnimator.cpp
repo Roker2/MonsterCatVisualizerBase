@@ -3,9 +3,9 @@
 // Copyright (c) 2026 Dzmitry Minko
 // SPDX-License-Identifier: MIT
 
-#include "animators/linesAnimator.h"
+#include "animation/linesAnimator.h"
 
-namespace monsterCatVisualizer::animators
+namespace monsterCatVisualizer::animation
 {
 
 LinesAnimator::GenerationDescriptor::GenerationDescriptor(
@@ -59,4 +59,4 @@ LinesAnimator::Line LinesAnimator::generateElement(double startTimeSeconds)
     };
 }
 
-} // namespace monsterCatVisualizer::animators
+} // namespace monsterCatVisualizer::animation

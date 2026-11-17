@@ -14,7 +14,7 @@
 #include <utility>
 #include <vector>
 
-#include "animators/baseAnimator.h"
+#include "animation/baseAnimator.h"
 #include "primitives/color.h"
 #include "primitives/vector2.h"
 #include "models/container.h"
@@ -23,7 +23,7 @@
 #include "utils/defines.h"
 #include "utils/mathUtils.h"
 
-namespace monsterCatVisualizer::animators
+namespace monsterCatVisualizer::animation
 {
 
 template <typename T>
@@ -185,4 +185,4 @@ protected:
     SharedGenerationDescriptor m_sharedGenerationDescriptor;
 };
 
-} // namespace monsterCatVisualizer::animators
+} // namespace monsterCatVisualizer::animation

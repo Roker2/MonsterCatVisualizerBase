@@ -11,24 +11,27 @@
 
 #include "utils/mathUtils.h"
 
-namespace
-{
-    constexpr std::size_t threadsCount = 3ull;
-}
-
 namespace monsterCatVisualizer::animation
 {
 
-AnimationOrchestrator::AnimationOrchestrator(AnimationClockPtr animationClock,
+AnimationOrchestrator::AnimationOrchestrator(TaskSchedulerPtr taskScheduler,
+    AnimationClockPtr animationClock,
     ViewportStatePtr viewportState)
-    : m_taskScheduler(threadsCount),
+    : m_taskScheduler(std::move(taskScheduler)),
     m_animationClock(std::move(animationClock)),
     m_viewportState(std::move(viewportState))
 {
+    if (!m_taskScheduler)
+        throw std::runtime_error("AnimationOrchestrator: empty task scheduler");
     if (!m_animationClock)
         throw std::runtime_error("AnimationOrchestrator: empty animation clock");
     if (!m_viewportState)
         throw std::runtime_error("AnimationOrchestrator: empty viewport state");
+}
+
+AnimationOrchestrator::~AnimationOrchestrator()
+{
+    removeAllAnimators();
 }
 
 const AnimationOrchestrator::Storage& AnimationOrchestrator::getStorage() const
@@ -52,7 +55,7 @@ void AnimationOrchestrator::addAnimator(AnimatorPtr animator,
     const auto viewportSize = m_viewportState->getSize();
     animator->initialize(viewportSize.width, viewportSize.height);
 
-    const auto taskId = m_taskScheduler.addTask(
+    const auto taskId = m_taskScheduler->addTask(
         [animator, animationClock = m_animationClock, viewportState = m_viewportState]()
         {
             const auto viewportSize =
@@ -80,7 +83,7 @@ void AnimationOrchestrator::removeAnimator(AnimatorPtr animator)
 
     if (it != m_animators.end())
     {
-        m_taskScheduler.removeTask(it->taskId);
+        m_taskScheduler->removeTask(it->taskId);
         m_animators.erase(it);
     }
 }
@@ -92,16 +95,16 @@ void AnimationOrchestrator::removeAnimator(utils::TaskScheduler::TaskId taskId)
 
     if (it != m_animators.end())
     {
-        m_taskScheduler.removeTask(it->taskId);
+        m_taskScheduler->removeTask(it->taskId);
         m_animators.erase(it);
     }
 }
 
 void AnimationOrchestrator::removeAllAnimators()
 {
-    for (const auto& [animator, taskId] : m_animators)
+    for (const auto& [_, taskId] : m_animators)
     {
-        m_taskScheduler.removeTask(taskId);
+        m_taskScheduler->removeTask(taskId);
     }
     m_animators.clear();
 }

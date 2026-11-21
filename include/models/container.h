@@ -19,13 +19,12 @@ namespace monsterCatVisualizer::models
 template <typename T>
 class Container
 {
+public:
     using DataStorage = std::vector<T>;
     using PatchStorage = Patch<T>;
 
-public:
     static constexpr std::size_t defaultPatchRemoveOperationsCapacity = 512ull;
     static constexpr float defaultPatchAppendedCapacityCoefficient = 0.2f;
-    static constexpr primitives::MinMax<float> patchAppendedCapacityCoefficientValidator{0.01f, 1.0f};
 
     std::size_t getDataSize() const
     {
@@ -76,24 +75,19 @@ public:
     }
 
     /** 0. Usually called on initialization. */
-    void reserve(std::size_t capacity,
-        bool reservePatch = true,
-        std::size_t patchRemoveOperationsCapacity = defaultPatchRemoveOperationsCapacity,
-        float patchAppendedCapacityCoefficient = defaultPatchAppendedCapacityCoefficient)
+    void reserve(std::size_t capacity)
     {
         std::lock_guard<std::mutex> lock(m_mutex);
         m_data.reserve(capacity);
-        if (reservePatch)
-        {
-            patchAppendedCapacityCoefficient = std::clamp(
-                patchAppendedCapacityCoefficient,
-                patchAppendedCapacityCoefficientValidator.min,
-                patchAppendedCapacityCoefficientValidator.max);
-            const std::size_t patchAppendedCapacity = static_cast<std::size_t>(std::ceil(
-                capacity * patchAppendedCapacityCoefficient));
-            m_patch.removeOperations.reserve(patchRemoveOperationsCapacity);
-            m_patch.appended.reserve(patchAppendedCapacity);
-        }
+        reservePatch(capacity, m_patch);
+    }
+
+    static void reservePatch(std::size_t capacity, Patch<T>& patch)
+    {
+        const std::size_t patchAppendedCapacity = static_cast<std::size_t>(std::ceil(
+            capacity * defaultPatchAppendedCapacityCoefficient));
+        patch.removeOperations.reserve(defaultPatchRemoveOperationsCapacity);
+        patch.appended.reserve(patchAppendedCapacity);
     }
 
     /** 1. Removes all stored data, including earlier changes in the pending patch. */

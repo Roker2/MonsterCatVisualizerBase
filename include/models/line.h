@@ -17,13 +17,12 @@ namespace monsterCatVisualizer::models
 
 struct LineGenerationDescriptor
 {
-    static constexpr float elementsDensityMin = 1.0f;
     static constexpr primitives::MinMax<float> floatValidator{0.0f, 1.0f};
 
     bool isValid() const
     {
         const bool elementsDensityValid = std::isfinite(elementsDensity) &&
-            elementsDensity > elementsDensityMin;
+            elementsDensity > utils::elementsDensityMin;
         const bool speedValid = utils::Approximate::less(speed.min, speed.max) &&
             floatValidator.contains(speed.min, false) &&
             floatValidator.contains(speed.max, false);
@@ -53,6 +52,8 @@ struct LineGenerationDescriptor
 
 struct Line
 {
+    using GenerationDescriptor = LineGenerationDescriptor;
+
     struct GeometryDescriptor
     {
         /** Normalized direction along the line in NSS. */

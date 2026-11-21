@@ -9,24 +9,24 @@ namespace monsterCatVisualizer::animation
 {
 
 ParticlesAnimator::GenerationDescriptor::GenerationDescriptor(
-    const ParticleGenerationDescriptor& source)
+    const SourceGenerationDescriptor& source)
     : radius(source.radius.min, source.radius.max)
 {
 }
 
 ParticlesAnimator::ParticlesAnimator(StoragePtr storagePtr,
-    const ParticleGenerationDescriptor& particleGenerationDescriptor)
-    : ContainerAnimator<Particle>(std::move(storagePtr), particleGenerationDescriptor),
-      m_generationDescriptor(particleGenerationDescriptor)
+    const SourceGenerationDescriptor& source)
+    : ContainerAnimator<DataModel>(std::move(storagePtr), source),
+      m_generationDescriptor(source)
 {
 }
 
 void ParticlesAnimator::removeElements(double timeSeconds,
-    float viewportWidth,
-    float viewportHeight)
+    std::int32_t viewportWidth,
+    std::int32_t viewportHeight)
 {
     removeOutsideViewport(timeSeconds, viewportWidth, viewportHeight,
-        [](const Particle& particle) { return particle.geometry.radius; });
+        [](const DataModel& particle) { return particle.geometry.radius; });
 }
 
 void ParticlesAnimator::appendElements(double timeSeconds, std::size_t desiredCount)
@@ -34,12 +34,12 @@ void ParticlesAnimator::appendElements(double timeSeconds, std::size_t desiredCo
     appendGeneratedElements(timeSeconds, desiredCount, appendLimit);
 }
 
-ParticlesAnimator::Particle ParticlesAnimator::generateElement(double startTimeSeconds)
+ParticlesAnimator::DataModel ParticlesAnimator::generateElement(double startTimeSeconds)
 {
     const primitives::Vector2<> direction = generateDirection();
     const primitives::ColorRGBA<> color = generateColor();
 
-    return Particle
+    return DataModel
     {
         generateTrajectory(startTimeSeconds, direction),
         GeometryDescriptor

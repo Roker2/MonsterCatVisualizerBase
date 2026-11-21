@@ -8,8 +8,8 @@ namespace monsterCatVisualizer::models
 {
 
 primitives::Vector2<> TrajectoryDescriptor::calculatePosition(double timeSeconds,
-    float viewportWidth,
-    float viewportHeight) const
+    std::int32_t viewportWidth,
+    std::int32_t viewportHeight) const
 {
     return calculatePosition(timeSeconds,
         utils::SpatialMathUtils::viewportToRatio(viewportWidth, viewportHeight));

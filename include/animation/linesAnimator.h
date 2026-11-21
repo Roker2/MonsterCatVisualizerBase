@@ -5,10 +5,11 @@
 
 #pragma once
 
+#include <cstdint>
 #include <random>
 
-#include "animation/containerAnimator.h"
 #include "models/line.h"
+#include "animation/containerAnimator.h"
 
 namespace monsterCatVisualizer::animation
 {
@@ -16,36 +17,28 @@ namespace monsterCatVisualizer::animation
 class LinesAnimator : public ContainerAnimator<models::Line>
 {
 public:
-    static constexpr std::size_t appendLimit = 25;
-
-    using LineGenerationDescriptor = models::LineGenerationDescriptor;
-    using Line = models::Line;
+    static constexpr std::size_t appendLimit = 50;
 
     struct GenerationDescriptor
     {
         using DistF = std::uniform_real_distribution<float>;
 
-        explicit GenerationDescriptor(const LineGenerationDescriptor& source);
+        explicit GenerationDescriptor(const SourceGenerationDescriptor& source);
 
         DistF length{};
         float lineWidth{};
     };
 
-    using GeometryDescriptor = Line::GeometryDescriptor;
-    using VisualDescriptor = Line::VisualDescriptor;
-    using Storage = ContainerAnimator<Line>::Storage;
-    using StoragePtr = ContainerAnimator<Line>::StoragePtr;
-
     LinesAnimator(StoragePtr storagePtr,
-        const LineGenerationDescriptor& lineGenerationDescriptor);
+        const SourceGenerationDescriptor& source);
 
 protected:
     void removeElements(double timeSeconds,
-        float viewportWidth,
-        float viewportHeight) override;
+        std::int32_t viewportWidth,
+        std::int32_t viewportHeight) override;
     void appendElements(double timeSeconds, std::size_t desiredCount) override;
 
-    Line generateElement(double startTimeSeconds) override;
+    DataModel generateElement(double startTimeSeconds) override;
 
     GenerationDescriptor m_generationDescriptor;
 };

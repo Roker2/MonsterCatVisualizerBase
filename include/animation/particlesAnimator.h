@@ -5,10 +5,11 @@
 
 #pragma once
 
+#include <cstdint>
 #include <random>
 
-#include "animation/containerAnimator.h"
 #include "models/particle.h"
+#include "animation/containerAnimator.h"
 
 namespace monsterCatVisualizer::animation
 {
@@ -16,35 +17,27 @@ namespace monsterCatVisualizer::animation
 class ParticlesAnimator : public ContainerAnimator<models::Particle>
 {
 public:
-    static constexpr std::size_t appendLimit = 250;
-
-    using ParticleGenerationDescriptor = models::ParticleGenerationDescriptor;
-    using Particle = models::Particle;
+    static constexpr std::size_t appendLimit = 100;
 
     struct GenerationDescriptor
     {
         using DistF = std::uniform_real_distribution<float>;
 
-        explicit GenerationDescriptor(const ParticleGenerationDescriptor& source);
+        explicit GenerationDescriptor(const SourceGenerationDescriptor& source);
 
         DistF radius{};
     };
 
-    using GeometryDescriptor = Particle::GeometryDescriptor;
-    using VisualDescriptor = Particle::VisualDescriptor;
-    using Storage = ContainerAnimator<Particle>::Storage;
-    using StoragePtr = ContainerAnimator<Particle>::StoragePtr;
-
     ParticlesAnimator(StoragePtr storagePtr,
-        const ParticleGenerationDescriptor& particleGenerationDescriptor);
+        const SourceGenerationDescriptor& source);
 
 protected:
     void removeElements(double timeSeconds,
-        float viewportWidth,
-        float viewportHeight) override;
+        std::int32_t viewportWidth,
+        std::int32_t viewportHeight) override;
     void appendElements(double timeSeconds, std::size_t desiredCount) override;
 
-    Particle generateElement(double startTimeSeconds) override;
+    DataModel generateElement(double startTimeSeconds) override;
 
     GenerationDescriptor m_generationDescriptor;
 };

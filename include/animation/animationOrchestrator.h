@@ -29,11 +29,14 @@ public:
 
     using AnimatorPtr = AnimatorDescriptor::AnimatorPtr;
     using Storage = std::vector<AnimatorDescriptor>;
+    using TaskSchedulerPtr = std::shared_ptr<utils::TaskScheduler>;
     using AnimationClockPtr = std::shared_ptr<utils::AnimationClock>;
     using ViewportStatePtr = std::shared_ptr<utils::ViewportState>;
 
-    AnimationOrchestrator(AnimationClockPtr animationClock,
+    AnimationOrchestrator(TaskSchedulerPtr taskScheduler,
+        AnimationClockPtr animationClock,
         ViewportStatePtr viewportState);
+    ~AnimationOrchestrator();
 
     const Storage& getStorage() const;
 
@@ -48,7 +51,7 @@ public:
 
 private:
     Storage m_animators;
-    utils::TaskScheduler m_taskScheduler;
+    TaskSchedulerPtr m_taskScheduler;
     AnimationClockPtr m_animationClock;
     ViewportStatePtr m_viewportState;
 };

@@ -9,25 +9,25 @@ namespace monsterCatVisualizer::animation
 {
 
 LinesAnimator::GenerationDescriptor::GenerationDescriptor(
-    const LineGenerationDescriptor& source)
+    const SourceGenerationDescriptor& source)
     : length(source.length.min, source.length.max),
       lineWidth(source.lineWidth)
 {
 }
 
 LinesAnimator::LinesAnimator(StoragePtr storagePtr,
-    const LineGenerationDescriptor& lineGenerationDescriptor)
-    : ContainerAnimator<Line>(std::move(storagePtr), lineGenerationDescriptor),
-      m_generationDescriptor(lineGenerationDescriptor)
+    const SourceGenerationDescriptor& source)
+    : ContainerAnimator<DataModel>(std::move(storagePtr), source),
+      m_generationDescriptor(source)
 {
 }
 
 void LinesAnimator::removeElements(double timeSeconds,
-    float viewportWidth,
-    float viewportHeight)
+    std::int32_t viewportWidth,
+    std::int32_t viewportHeight)
 {
     removeOutsideViewport(timeSeconds, viewportWidth, viewportHeight,
-        [](const Line& line)
+        [](const DataModel& line)
         {
             return line.geometry.length + line.geometry.lineWidth;
         });
@@ -38,12 +38,12 @@ void LinesAnimator::appendElements(double timeSeconds, std::size_t desiredCount)
     appendGeneratedElements(timeSeconds, desiredCount, appendLimit);
 }
 
-LinesAnimator::Line LinesAnimator::generateElement(double startTimeSeconds)
+LinesAnimator::DataModel LinesAnimator::generateElement(double startTimeSeconds)
 {
     const primitives::Vector2<> direction = generateDirection();
     const primitives::ColorRGBA<> color = generateColor();
 
-    return Line
+    return DataModel
     {
         generateTrajectory(startTimeSeconds, direction),
         GeometryDescriptor

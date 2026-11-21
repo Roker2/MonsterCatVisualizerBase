@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <cstdint>
 #include <atomic>
 
 namespace monsterCatVisualizer::utils
@@ -12,8 +13,8 @@ class ViewportState
 public:
     struct ViewportSize
     {
-        float width{};
-        float height{};
+        std::int32_t width{};
+        std::int32_t height{};
     };
 
     inline ViewportSize getSize() const noexcept

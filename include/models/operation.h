@@ -19,11 +19,16 @@ struct OperationRemove
 template <typename T>
 struct Patch
 {
+    bool empty() const noexcept
+    {
+        return !clearFlag && removeOperations.empty() && appended.empty();
+    }
+
     void reset() noexcept
     {
+        clearFlag = false;
         removeOperations.clear();
         appended.clear();
-        clearFlag = false;
     }
 
     bool clearFlag{};
@@ -61,30 +66,6 @@ bool applyRemoveOperation(Container& data, const OperationRemove& operation)
         const auto tailBegin = data.end() - static_cast<std::ptrdiff_t>(operation.count);
         data.erase(tailBegin, data.end());
     }
-
-    return true;
-}
-
-template <typename Container, typename T>
-bool applyPatch(Container& data, Patch<T>&& patch)
-{
-    if (patch.clearFlag)
-    {
-        data.clear();
-    }
-    else
-    {
-        for (const auto& operation : patch.removeOperations)
-        {
-            if (!applyRemoveOperation(data, operation))
-                return false;
-        }
-    }
-
-    data.insert(
-        data.end(),
-        std::make_move_iterator(patch.appended.begin()),
-        std::make_move_iterator(patch.appended.end()));
 
     return true;
 }

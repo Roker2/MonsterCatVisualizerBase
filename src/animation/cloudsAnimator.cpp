@@ -9,7 +9,7 @@ namespace monsterCatVisualizer::animation
 {
 
 CloudsAnimator::GenerationDescriptor::GenerationDescriptor(
-    const CloudGenerationDescriptor& source)
+    const SourceGenerationDescriptor& source)
     : radius(source.radius.min, source.radius.max),
       themeColorProbability(source.themeColorProbability)
 {
@@ -17,10 +17,10 @@ CloudsAnimator::GenerationDescriptor::GenerationDescriptor(
 
 CloudsAnimator::CloudsAnimator(primitives::ColorRGB<> themeColor,
     StoragePtr storagePtr,
-    const CloudGenerationDescriptor& cloudGenerationDescriptor)
-    : ContainerAnimator<Cloud>(std::move(storagePtr), cloudGenerationDescriptor),
+    const SourceGenerationDescriptor& source)
+    : ContainerAnimator<DataModel>(std::move(storagePtr), source),
       m_themeColor(packColor(themeColor.getNormalized())),
-      m_generationDescriptor(cloudGenerationDescriptor)
+      m_generationDescriptor(source)
 {
 }
 
@@ -35,11 +35,11 @@ void CloudsAnimator::setThemeColor(primitives::ColorRGB<> themeColor)
 }
 
 void CloudsAnimator::removeElements(double timeSeconds,
-    float viewportWidth,
-    float viewportHeight)
+    std::int32_t viewportWidth,
+    std::int32_t viewportHeight)
 {
     removeOutsideViewport(timeSeconds, viewportWidth, viewportHeight,
-        [](const Cloud& cloud) { return cloud.geometry.radius; });
+        [](const DataModel& cloud) { return cloud.geometry.radius; });
 }
 
 void CloudsAnimator::appendElements(double timeSeconds, std::size_t desiredCount)
@@ -47,7 +47,7 @@ void CloudsAnimator::appendElements(double timeSeconds, std::size_t desiredCount
     appendGeneratedElements(timeSeconds, desiredCount, appendLimit);
 }
 
-CloudsAnimator::Cloud CloudsAnimator::generateElement(double startTimeSeconds)
+CloudsAnimator::DataModel CloudsAnimator::generateElement(double startTimeSeconds)
 {
     const primitives::Vector2<> direction = generateDirection();
     const bool isThemeColored = m_generationDescriptor.themeColor(m_rng) <
@@ -59,7 +59,7 @@ CloudsAnimator::Cloud CloudsAnimator::generateElement(double startTimeSeconds)
     else
         color = generateColor();
 
-    return Cloud
+    return DataModel
     {
         generateTrajectory(startTimeSeconds, direction),
         GeometryDescriptor

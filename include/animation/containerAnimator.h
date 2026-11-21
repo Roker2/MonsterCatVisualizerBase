@@ -7,21 +7,20 @@
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
-#include <limits>
 #include <memory>
 #include <random>
 #include <stdexcept>
 #include <utility>
 #include <vector>
 
-#include "animation/baseAnimator.h"
+#include "utils/approximate.h"
+#include "utils/defines.h"
+#include "utils/mathUtils.h"
 #include "primitives/color.h"
 #include "primitives/vector2.h"
 #include "models/container.h"
 #include "models/trajectory.h"
-#include "utils/approximate.h"
-#include "utils/defines.h"
-#include "utils/mathUtils.h"
+#include "animation/baseAnimator.h"
 
 namespace monsterCatVisualizer::animation
 {
@@ -30,7 +29,12 @@ template <typename T>
 class ContainerAnimator : public BaseAnimator
 {
 public:
-    using Storage = models::Container<T>;
+    using DataModel = T;
+    using SourceGenerationDescriptor = typename DataModel::GenerationDescriptor;
+    using GeometryDescriptor = typename DataModel::GeometryDescriptor;
+    using VisualDescriptor = typename DataModel::VisualDescriptor;
+
+    using Storage = models::Container<DataModel>;
     using StoragePtr = std::shared_ptr<Storage>;
 
     StoragePtr getStorage() const
@@ -50,27 +54,22 @@ public:
         m_storagePtr->clear();
     }
 
-    // An update is not atomic across the patch check, removal, and append.
-    // Intended for one producer and one consumer; no other thread may mutate
-    // this storage while the producer is updating it.
-    void update(double timeSeconds, float viewportWidth, float viewportHeight) override
+    /**
+     * An update is not atomic across the patch check, removal, and append.
+     * Intended for one producer and one consumer.
+     * No other thread may mutate this storage while the producer is updating it.
+     */
+    void update(double timeSeconds, std::int32_t viewportWidth, std::int32_t viewportHeight) override
     {
         if (m_storagePtr->hasPatch())
             return;
         BaseAnimator::update(timeSeconds, viewportWidth, viewportHeight);
     }
 
-    std::size_t calculateDesiredCount(float viewportWidth, float viewportHeight) const override
+    std::size_t calculateDesiredCount(std::int32_t viewportWidth, std::int32_t viewportHeight) const override
     {
-        const float ratio = utils::SpatialMathUtils::viewportToRatio(viewportWidth, viewportHeight);
-        const float viewportMultiplier = std::max(ratio, 1.0f / ratio);
-        const float count = std::round(m_sharedGenerationDescriptor.elementsDensity * viewportMultiplier);
-
-        if (!std::isfinite(count) ||
-            count >= static_cast<float>(std::numeric_limits<std::size_t>::max()))
-            throw std::overflow_error("ContainerAnimator: desired element count is too large");
-
-        return static_cast<std::size_t>(count);
+        return utils::SpatialMathUtils::calculateDesiredCount(
+            m_sharedGenerationDescriptor.elementsDensity, viewportWidth, viewportHeight);
     }
 
 protected:
@@ -115,10 +114,10 @@ protected:
     }
 
     template <typename Extent>
-    void removeOutsideViewport(double timeSeconds, float viewportWidth,
-        float viewportHeight, Extent&& extent)
+    void removeOutsideViewport(double timeSeconds, std::int32_t viewportWidth,
+        std::int32_t viewportHeight, Extent&& extent)
     {
-        m_storagePtr->removeIf([&](const T& element)
+        m_storagePtr->removeIf([&](const DataModel& element)
         {
             const auto position = element.trajectory.calculatePosition(
                 timeSeconds, viewportWidth, viewportHeight);
@@ -139,7 +138,7 @@ protected:
             return;
 
         const std::size_t newCount = std::min(desiredCount - oldCount, appendLimit);
-        std::vector<T> newElements;
+        std::vector<DataModel> newElements;
         newElements.reserve(newCount);
         for (std::size_t i = newCount; i > 0; --i)
             newElements.push_back(generateElement(timeSeconds));
@@ -147,7 +146,7 @@ protected:
         m_storagePtr->append(newElements);
     }
 
-    virtual T generateElement(double startTimeSeconds) = 0;
+    virtual DataModel generateElement(double startTimeSeconds) = 0;
 
     models::TrajectoryDescriptor generateTrajectory(double startTimeSeconds, primitives::Vector2<> direction)
     {

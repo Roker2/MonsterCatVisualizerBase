@@ -56,8 +56,6 @@ struct Line
 
     struct GeometryDescriptor
     {
-        /** Normalized direction along the line in NSS. */
-        primitives::Vector2<> direction{1.0f, 0.0f};
         float length{};
         float lineWidth{};
     };

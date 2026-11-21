@@ -48,7 +48,6 @@ LinesAnimator::DataModel LinesAnimator::generateElement(double startTimeSeconds)
         generateTrajectory(startTimeSeconds, direction),
         GeometryDescriptor
         {
-            direction,
             m_generationDescriptor.length(m_rng),
             m_generationDescriptor.lineWidth
         },

@@ -29,7 +29,7 @@ void LinesAnimator::removeElements(double timeSeconds,
     removeOutsideViewport(timeSeconds, viewportWidth, viewportHeight,
         [](const DataModel& line)
         {
-            return line.geometry.length + line.geometry.lineWidth;
+            return (line.geometry.length + line.geometry.lineWidth) * 0.5f;
         });
 }
 

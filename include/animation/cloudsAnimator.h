@@ -5,10 +5,11 @@
 
 #pragma once
 
-#include <atomic>
 #include <cstdint>
+#include <memory>
 #include <random>
 
+#include "utils/themeColorState.h"
 #include "models/cloud.h"
 #include "animation/containerAnimator.h"
 
@@ -20,7 +21,7 @@ class CloudsAnimator : public ContainerAnimator<models::Cloud>
 public:
     static constexpr std::size_t appendLimit = 25;
 
-    using ThemeColorStorage = std::atomic<std::uint32_t>;
+    using ThemeColorStatePtr = std::shared_ptr<utils::ThemeColorState>;
 
     struct GenerationDescriptor
     {
@@ -33,12 +34,11 @@ public:
         float themeColorProbability{};
     };
 
-    CloudsAnimator(primitives::ColorRGB<> themeColor,
+    CloudsAnimator(ThemeColorStatePtr themeColorState,
         StoragePtr storagePtr,
         const SourceGenerationDescriptor& source);
 
-    primitives::ColorRGB<> getThemeColor() const;
-    void setThemeColor(primitives::ColorRGB<> themeColor);
+    ThemeColorStatePtr getThemeColorState() const;
 
 protected:
     void removeElements(double timeSeconds,
@@ -48,7 +48,7 @@ protected:
 
     DataModel generateElement(double startTimeSeconds) override;
 
-    ThemeColorStorage m_themeColor{};
+    ThemeColorStatePtr m_themeColorState;
     GenerationDescriptor m_generationDescriptor;
 };
 

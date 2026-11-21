@@ -15,23 +15,20 @@ CloudsAnimator::GenerationDescriptor::GenerationDescriptor(
 {
 }
 
-CloudsAnimator::CloudsAnimator(primitives::ColorRGB<> themeColor,
+CloudsAnimator::CloudsAnimator(ThemeColorStatePtr themeColorState,
     StoragePtr storagePtr,
     const SourceGenerationDescriptor& source)
     : ContainerAnimator<DataModel>(std::move(storagePtr), source),
-      m_themeColor(packColor(themeColor.getNormalized())),
+      m_themeColorState(std::move(themeColorState)),
       m_generationDescriptor(source)
 {
+    if (!m_themeColorState)
+        throw std::runtime_error("CloudsAnimator: empty themeColorState");
 }
 
-primitives::ColorRGB<> CloudsAnimator::getThemeColor() const
+CloudsAnimator::ThemeColorStatePtr CloudsAnimator::getThemeColorState() const
 {
-    return primitives::unpackColor(m_themeColor.load(std::memory_order_relaxed));
-}
-
-void CloudsAnimator::setThemeColor(primitives::ColorRGB<> themeColor)
-{
-    m_themeColor.store(primitives::packColor(themeColor.getNormalized()), std::memory_order_relaxed);
+    return m_themeColorState;
 }
 
 void CloudsAnimator::removeElements(double timeSeconds,

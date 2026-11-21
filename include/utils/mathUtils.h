@@ -16,8 +16,6 @@ struct SpatialMathUtils
     static std::size_t calculateDesiredCount(float elementsDensity,
         std::int32_t viewportWidth,
         std::int32_t viewportHeight);
-    static std::size_t calculateDesiredCount(float elementsDensity,
-        float viewportRatio);
 
     /** Convert position from NVS to NSS */
     static primitives::Vector2<> convertNVSToNSS(

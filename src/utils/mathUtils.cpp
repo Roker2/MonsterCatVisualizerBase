@@ -13,25 +13,10 @@ namespace monsterCatVisualizer::utils
 {
 
 std::size_t SpatialMathUtils::calculateDesiredCount(float elementsDensity,
-    std::int32_t viewportWidth,
-    std::int32_t viewportHeight)
+    std::int32_t /* viewportWidth */,
+    std::int32_t /* viewportHeight */)
 {
-    const float viewportRatio = viewportToRatio(
-        viewportWidth, viewportHeight);
-    return calculateDesiredCount(elementsDensity, viewportRatio);
-}
-
-std::size_t SpatialMathUtils::calculateDesiredCount(float elementsDensity,
-    float viewportRatio)
-{
-    const float viewportMultiplier = std::max(viewportRatio, 1.0f / viewportRatio);
-    const float count = std::round(elementsDensity * viewportMultiplier);
-
-    if (!std::isfinite(count) ||
-        count >= static_cast<float>(std::numeric_limits<std::size_t>::max()))
-        throw std::overflow_error("ContainerAnimator: desired element count is too large");
-
-    return static_cast<std::size_t>(count);
+    return elementsDensity;
 }
 
 primitives::Vector2<> SpatialMathUtils::convertNVSToNSS(

@@ -124,7 +124,7 @@ protected:
             const float flatExtentNSS = extent(element);
             const auto extentNVS = utils::SpatialMathUtils::convertNSSToNVS(
                 primitives::Vector2<>{flatExtentNSS, flatExtentNSS}, viewportWidth, viewportHeight);
-    
+
             return utils::Approximate::lessZero(position.x + extentNVS.x) ||
                 utils::Approximate::greater(position.x - extentNVS.x, 1.0f) ||
                 utils::Approximate::lessZero(position.y + extentNVS.y) ||

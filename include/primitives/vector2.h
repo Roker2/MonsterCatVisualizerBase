@@ -73,6 +73,16 @@ struct Vector2
     }
 
     template <typename U>
+    Vector2 operator/(U scale) const
+    {
+        return Vector2
+        {
+            static_cast<T>(x / scale),
+            static_cast<T>(y / scale)
+        };
+    }
+
+    template <typename U>
     Vector2 operator+(const Vector2<U>& other) const
     {
         return Vector2

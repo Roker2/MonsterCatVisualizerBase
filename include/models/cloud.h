@@ -57,6 +57,7 @@ struct Cloud
 
     struct GeometryDescriptor
     {
+        /** Radius in NSS */
         float radius{};
     };
 

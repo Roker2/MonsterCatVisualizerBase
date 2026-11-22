@@ -56,7 +56,9 @@ struct Line
 
     struct GeometryDescriptor
     {
+        /** Length in NSS */
         float length{};
+        /** Line width in NSS */
         float lineWidth{};
     };
 

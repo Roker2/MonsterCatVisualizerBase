@@ -51,8 +51,11 @@ struct Particle
 {
     using GenerationDescriptor = ParticleGenerationDescriptor;
 
+    static constexpr float minRadiusPx = 2.5f;
+
     struct GeometryDescriptor
     {
+        /** Radius in NSS */
         float radius{};
     };
 

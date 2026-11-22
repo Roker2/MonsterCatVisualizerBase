@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <cmath>
+
 #include "utils/approximate.h"
 #include "primitives/minMax.h"
 #include "primitives/color.h"
@@ -15,7 +17,8 @@ struct BaseGenerationDescriptor
 
     bool isValid() const
     {
-        const bool elementsDensityValid = elementsDensity > utils::elementsDensityMin;
+        const bool elementsDensityValid = std::isfinite(elementsDensity) &&
+            elementsDensity > utils::elementsDensityMin;
         const bool speedValid = utils::Approximate::less(speed.min, speed.max) &&
             floatValidator.contains(speed.min, false) &&
             floatValidator.contains(speed.max, false);

@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include <array>
 #include <cstdint>
 #include <random>
 
@@ -17,15 +18,30 @@ namespace monsterCatVisualizer::animation
 class ParticlesAnimator : public ContainerAnimator<models::Particle>
 {
 public:
-    static constexpr std::size_t appendLimit = 100;
+    static constexpr std::size_t appendLimit = 250;
 
     struct GenerationDescriptor
     {
-        using DistF = std::uniform_real_distribution<float>;
+        static constexpr std::array<float, 6> boundaries
+        {
+            0.0f,
+            0.1f,
+            0.2f,
+            0.3f,
+            0.55f,
+            1.0f
+        };
+
+        static constexpr std::array<float, 6> weights
+        {
+            0.2f, 2.0f, 8.0f, 2.5f, 0.4f, 0.0f
+        };
+
+        using DistPWF = std::piecewise_linear_distribution<float>;
 
         explicit GenerationDescriptor(const SourceGenerationDescriptor& source);
 
-        DistF radius{};
+        DistPWF radius{};
     };
 
     ParticlesAnimator(StoragePtr storagePtr,

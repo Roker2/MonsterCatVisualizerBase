@@ -5,12 +5,35 @@
 
 #include "animation/particlesAnimator.h"
 
+namespace
+{
+
+template <typename T>
+std::piecewise_linear_distribution<float> calculateDistPWF(
+    monsterCatVisualizer::primitives::MinMax<float> radius,
+    T boundaries, const T& weights)
+{
+    const float range = radius.max - radius.min;
+
+    const auto preEnd = std::prev(boundaries.end());
+    
+    for (auto it = boundaries.begin(); it != preEnd; ++it)
+        *it = radius.min + range * (*it);
+
+    *preEnd = radius.max;
+
+    return std::piecewise_linear_distribution<float>(
+        boundaries.begin(), boundaries.end(), weights.begin());
+}
+
+} // namespace
+
 namespace monsterCatVisualizer::animation
 {
 
 ParticlesAnimator::GenerationDescriptor::GenerationDescriptor(
     const SourceGenerationDescriptor& source)
-    : radius(source.radius.min, source.radius.max)
+    : radius(calculateDistPWF(source.radius, boundaries, weights))
 {
 }
 

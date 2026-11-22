@@ -17,8 +17,8 @@ void BaseAnimator::update(double timeSeconds,
     std::int32_t viewportHeight)
 {
     const std::size_t desiredCount = calculateDesiredCount(viewportWidth, viewportHeight);
-    removeElements(timeSeconds, viewportWidth, viewportHeight);
-    appendElements(timeSeconds, desiredCount);
+    removeElements(timeSeconds, viewportWidth, viewportHeight, desiredCount);
+    appendElements(timeSeconds, viewportWidth, viewportHeight, desiredCount);
 }
 
 } // namespace monsterCatVisualizer::animation

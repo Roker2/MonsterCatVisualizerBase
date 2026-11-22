@@ -46,31 +46,37 @@ ParticlesAnimator::ParticlesAnimator(StoragePtr storagePtr,
 
 void ParticlesAnimator::removeElements(double timeSeconds,
     std::int32_t viewportWidth,
-    std::int32_t viewportHeight)
+    std::int32_t viewportHeight,
+    std::size_t desiredCount)
 {
     const float minRadius = utils::SpatialMathUtils::convertSSToNSS(
         DataModel::minRadiusPx, viewportWidth, viewportHeight);
 
-    removeOutsideViewport(timeSeconds, viewportWidth, viewportHeight,
+    removeOutsideViewport(timeSeconds, viewportWidth, viewportHeight, desiredCount,
         [&minRadius](const DataModel& particle)
         {
             return std::max(particle.geometry.radius, minRadius);
         });
 }
 
-void ParticlesAnimator::appendElements(double timeSeconds, std::size_t desiredCount)
+void ParticlesAnimator::appendElements(double timeSeconds,
+    std::int32_t viewportWidth,
+    std::int32_t viewportHeight,
+    std::size_t desiredCount)
 {
-    appendGeneratedElements(timeSeconds, desiredCount, appendLimit);
+    appendGeneratedElements(timeSeconds, viewportWidth, viewportHeight, desiredCount, appendLimit);
 }
 
-ParticlesAnimator::DataModel ParticlesAnimator::generateElement(double startTimeSeconds)
+ParticlesAnimator::DataModel ParticlesAnimator::generateElement(double timeSeconds,
+    std::int32_t /* viewportWidth */,
+    std::int32_t /* viewportHeight */)
 {
     const primitives::Vector2<> direction = generateDirection();
     const primitives::ColorRGBA<> color = generateColor();
 
     return DataModel
     {
-        generateTrajectory(startTimeSeconds, direction),
+        generateTrajectory(timeSeconds, direction),
         generateLifetime(),
         GeometryDescriptor
         {

@@ -33,18 +33,24 @@ CloudsAnimator::ThemeColorStatePtr CloudsAnimator::getThemeColorState() const
 
 void CloudsAnimator::removeElements(double timeSeconds,
     std::int32_t viewportWidth,
-    std::int32_t viewportHeight)
+    std::int32_t viewportHeight,
+    std::size_t desiredCount)
 {
-    removeOutsideViewport(timeSeconds, viewportWidth, viewportHeight,
+    removeOutsideViewport(timeSeconds, viewportWidth, viewportHeight, desiredCount,
         [](const DataModel& cloud) { return cloud.geometry.radius; });
 }
 
-void CloudsAnimator::appendElements(double timeSeconds, std::size_t desiredCount)
+void CloudsAnimator::appendElements(double timeSeconds,
+    std::int32_t viewportWidth,
+    std::int32_t viewportHeight,
+    std::size_t desiredCount)
 {
-    appendGeneratedElements(timeSeconds, desiredCount, appendLimit);
+    appendGeneratedElements(timeSeconds, viewportWidth, viewportHeight, desiredCount, appendLimit);
 }
 
-CloudsAnimator::DataModel CloudsAnimator::generateElement(double startTimeSeconds)
+CloudsAnimator::DataModel CloudsAnimator::generateElement(double timeSeconds,
+    std::int32_t /* viewportWidth */,
+    std::int32_t /* viewportHeight */)
 {
     const primitives::Vector2<> direction = generateDirection();
     const bool isThemeColored = m_generationDescriptor.themeColor(m_rng) <
@@ -58,7 +64,7 @@ CloudsAnimator::DataModel CloudsAnimator::generateElement(double startTimeSecond
 
     return DataModel
     {
-        generateTrajectory(startTimeSeconds, direction),
+        generateTrajectory(timeSeconds, direction),
         generateLifetime(),
         GeometryDescriptor
         {

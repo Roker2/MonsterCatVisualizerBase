@@ -112,6 +112,8 @@ protected:
         DistU16 colorG{};
         DistU16 colorB{};
         DistF colorA{};
+
+        DistF appendElementsMultiplier{0.7f, 1.0f};
     };
 
     template <typename SourceDescriptor>
@@ -124,15 +126,20 @@ protected:
     }
 
     template <typename Extent>
-    void removeOutsideViewport(double timeSeconds, std::int32_t viewportWidth,
-        std::int32_t viewportHeight, Extent&& extent)
+    void removeOutsideViewport(double timeSeconds,
+        std::int32_t viewportWidth,
+        std::int32_t viewportHeight,
+        std::size_t desiredCount,
+        Extent&& extent)
     {
+        // TODO: remove elements if they exceed desiredCount
         m_storagePtr->removeIf([&](const DataModel& element)
         {
-            if (utils::Approximate::greater(
-                timeSeconds - element.trajectory.startTimeSeconds,
-                element.lifetime.lifetimeSeconds))
+            const double age = timeSeconds - element.trajectory.startTimeSeconds;
+            if (utils::Approximate::greater(age, element.lifetime.lifetimeSeconds))
                 return true;
+            if (utils::Approximate::less(age, element.lifetime.fadeInSeconds))
+                return false;
 
             const auto position = element.trajectory.calculatePosition(
                 timeSeconds, viewportWidth, viewportHeight);
@@ -147,7 +154,10 @@ protected:
         });
     }
 
-    void appendGeneratedElements(double timeSeconds, std::size_t desiredCount,
+    void appendGeneratedElements(double timeSeconds,
+        std::int32_t viewportWidth,
+        std::int32_t viewportHeight,
+        std::size_t desiredCount,
         std::size_t appendLimit)
     {
         const std::size_t oldCount = m_storagePtr->getDataSize();
@@ -158,14 +168,17 @@ protected:
         std::vector<DataModel> newElements;
         newElements.reserve(newCount);
         for (std::size_t i = newCount; i > 0; --i)
-            newElements.push_back(generateElement(timeSeconds));
+            newElements.push_back(generateElement(
+                timeSeconds, viewportWidth, viewportHeight));
 
         m_storagePtr->append(newElements);
     }
 
-    virtual DataModel generateElement(double startTimeSeconds) = 0;
+    virtual DataModel generateElement(double timeSeconds,
+        std::int32_t viewportWidth,
+        std::int32_t viewportHeight) = 0;
 
-    models::TrajectoryDescriptor generateTrajectory(double startTimeSeconds, primitives::Vector2<> direction)
+    models::TrajectoryDescriptor generateTrajectory(double timeSeconds, primitives::Vector2<> direction)
     {
         return models::TrajectoryDescriptor
         {
@@ -176,7 +189,7 @@ protected:
             },
             direction,
             m_sharedGenerationDescriptor.speed(m_rng),
-            startTimeSeconds
+            timeSeconds
         };
     }
 

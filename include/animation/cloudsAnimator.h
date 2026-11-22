@@ -43,10 +43,16 @@ public:
 protected:
     void removeElements(double timeSeconds,
         std::int32_t viewportWidth,
-        std::int32_t viewportHeight) override;
-    void appendElements(double timeSeconds, std::size_t desiredCount) override;
+        std::int32_t viewportHeight,
+        std::size_t desiredCount) override;
+    void appendElements(double timeSeconds,
+        std::int32_t viewportWidth,
+        std::int32_t viewportHeight,
+        std::size_t desiredCount) override;
 
-    DataModel generateElement(double startTimeSeconds) override;
+    DataModel generateElement(double timeSeconds,
+        std::int32_t viewportWidth,
+        std::int32_t viewportHeight) override;
 
     ThemeColorStatePtr m_themeColorState;
     GenerationDescriptor m_generationDescriptor;

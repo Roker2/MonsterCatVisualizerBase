@@ -27,8 +27,12 @@ public:
 protected:
     virtual void removeElements(double timeSeconds,
         std::int32_t viewportWidth,
-        std::int32_t viewportHeight) = 0;
-    virtual void appendElements(double timeSeconds, std::size_t desiredCount) = 0;
+        std::int32_t viewportHeight,
+        std::size_t desiredCount) = 0;
+    virtual void appendElements(double timeSeconds,
+        std::int32_t viewportWidth,
+        std::int32_t viewportHeight,
+        std::size_t desiredCount) = 0;
 
     std::mt19937 m_rng{std::random_device{}()};
 };

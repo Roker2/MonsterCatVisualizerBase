@@ -113,7 +113,9 @@ protected:
         DistU16 colorB{};
         DistF colorA{};
 
-        DistF appendElementsMultiplier{0.7f, 1.0f};
+        float skipAppendChance{0.4f};
+        DistF skipAppend{0.0f, 1.0f};
+        DistF appendElementsMultiplier{0.6f, 0.9f};
     };
 
     template <typename SourceDescriptor>
@@ -130,11 +132,22 @@ protected:
         std::int32_t viewportWidth,
         std::int32_t viewportHeight,
         std::size_t desiredCount,
+        std::size_t shrinkLimit,
         Extent&& extent)
     {
-        // TODO: remove elements if they exceed desiredCount
+        const std::size_t oldCount = m_storagePtr->getDataSize();
+        std::size_t removeCount = oldCount > desiredCount
+            ? std::min(oldCount - desiredCount, shrinkLimit)
+            : 0;
+
         m_storagePtr->removeIf([&](const DataModel& element)
         {
+            if (removeCount > 0)
+            {
+                --removeCount;
+                return true;
+            }
+
             const double age = timeSeconds - element.trajectory.startTimeSeconds;
             if (utils::Approximate::greater(age, element.lifetime.lifetimeSeconds))
                 return true;
@@ -154,7 +167,11 @@ protected:
         });
     }
 
-    void appendGeneratedElements(double timeSeconds,
+    /**
+     * Append new elements.
+     * @return true if append happend (was not skipped)
+     */
+    bool appendGeneratedElements(double timeSeconds,
         std::int32_t viewportWidth,
         std::int32_t viewportHeight,
         std::size_t desiredCount,
@@ -162,9 +179,20 @@ protected:
     {
         const std::size_t oldCount = m_storagePtr->getDataSize();
         if (desiredCount <= oldCount)
-            return;
+            return false;
 
-        const std::size_t newCount = std::min(desiredCount - oldCount, appendLimit);
+        if (m_sharedGenerationDescriptor.skipAppend(m_rng) <
+            m_sharedGenerationDescriptor.skipAppendChance)
+            return false;
+
+        const std::size_t newRawCount = std::min(desiredCount - oldCount, appendLimit);
+        const float appendElementsMultiplier =
+            m_sharedGenerationDescriptor.appendElementsMultiplier(m_rng);
+        const std::size_t newCount = std::clamp(
+            static_cast<std::size_t>(std::round(newRawCount * appendElementsMultiplier)),
+            std::size_t{1},
+            newRawCount);
+
         std::vector<DataModel> newElements;
         newElements.reserve(newCount);
         for (std::size_t i = newCount; i > 0; --i)
@@ -172,6 +200,8 @@ protected:
                 timeSeconds, viewportWidth, viewportHeight));
 
         m_storagePtr->append(newElements);
+
+        return true;
     }
 
     virtual DataModel generateElement(double timeSeconds,

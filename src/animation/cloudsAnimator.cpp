@@ -36,7 +36,7 @@ void CloudsAnimator::removeElements(double timeSeconds,
     std::int32_t viewportHeight,
     std::size_t desiredCount)
 {
-    removeOutsideViewport(timeSeconds, viewportWidth, viewportHeight, desiredCount,
+    removeOutsideViewport(timeSeconds, viewportWidth, viewportHeight, desiredCount, appendLimit,
         [](const DataModel& cloud) { return cloud.geometry.radius; });
 }
 

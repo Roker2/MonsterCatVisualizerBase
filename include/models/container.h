@@ -23,7 +23,7 @@ public:
     using DataStorage = std::vector<T>;
     using PatchStorage = Patch<T>;
 
-    static constexpr std::size_t defaultPatchRemoveOperationsCapacity = 512ull;
+    static constexpr std::size_t defaultPatchRemoveOperationsCapacity{512};
     static constexpr float defaultPatchAppendedCapacityCoefficient = 0.2f;
 
     std::size_t getDataSize() const

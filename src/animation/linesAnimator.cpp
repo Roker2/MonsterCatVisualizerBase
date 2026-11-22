@@ -27,7 +27,7 @@ void LinesAnimator::removeElements(double timeSeconds,
     std::int32_t viewportHeight,
     std::size_t desiredCount)
 {
-    removeOutsideViewport(timeSeconds, viewportWidth, viewportHeight, desiredCount,
+    removeOutsideViewport(timeSeconds, viewportWidth, viewportHeight, desiredCount, appendLimit,
         [](const DataModel& line)
         {
             return (line.geometry.length + line.geometry.lineWidth) * 0.5f;
@@ -39,8 +39,10 @@ void LinesAnimator::appendElements(double timeSeconds,
     std::int32_t viewportHeight,
     std::size_t desiredCount)
 {
-    appendGeneratedElements(timeSeconds, viewportWidth, viewportHeight, desiredCount, appendLimit);
-    m_generateInitial = false;
+    if (appendGeneratedElements(timeSeconds, viewportWidth, viewportHeight, desiredCount, appendLimit))
+    {
+        m_generateInitial = false;
+    }
 }
 
 LinesAnimator::DataModel LinesAnimator::generateElement(double timeSeconds,
@@ -51,9 +53,13 @@ LinesAnimator::DataModel LinesAnimator::generateElement(double timeSeconds,
     const primitives::ColorRGBA<> color = generateColor();
     const float length = m_generationDescriptor.length(m_rng);
 
+    const auto trajectory = m_generateInitial
+        ? generateTrajectory(timeSeconds, direction)
+        : generateCustomTrajectory(timeSeconds, viewportWidth, viewportHeight, direction, length);
+
     return DataModel
     {
-        generateCustomTrajectory(timeSeconds, viewportWidth, viewportHeight, direction, length),
+        trajectory,
         generateLifetime(),
         GeometryDescriptor
         {

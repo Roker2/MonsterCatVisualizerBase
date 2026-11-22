@@ -47,6 +47,7 @@ protected:
     DataModel generateElement(double timeSeconds,
         std::int32_t viewportWidth,
         std::int32_t viewportHeight) override;
+
     models::TrajectoryDescriptor generateCustomTrajectory(
         double timeSeconds,
         std::int32_t viewportWidth,

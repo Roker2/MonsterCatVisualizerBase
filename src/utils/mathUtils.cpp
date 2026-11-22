@@ -6,16 +6,27 @@
 #include <cmath>
 #include <stdexcept>
 
+#include "utils/defines.h"
 #include "utils/approximate.h"
 
 namespace monsterCatVisualizer::utils
 {
 
 std::size_t SpatialMathUtils::calculateDesiredCount(float elementsDensity,
-    std::int32_t /* viewportWidth */,
-    std::int32_t /* viewportHeight */)
+    std::int32_t viewportWidth,
+    std::int32_t viewportHeight)
 {
-    return static_cast<std::size_t>(elementsDensity);
+    if (!viewportSizeValid(viewportWidth, viewportHeight))
+        throw std::invalid_argument("SpatialMathUtils: invalid viewport size");
+
+    const std::size_t mainViewportSize = std::max(
+        std::max(viewportWidth, viewportHeight),
+        minMainViewportSize);
+    const float viewportMultiplier = std::sqrt(static_cast<float>(mainViewportSize) /
+        defaultMainViewportSize);
+
+    return static_cast<std::size_t>(std::round(
+        elementsDensity * viewportMultiplier));
 }
 
 primitives::Vector2<> SpatialMathUtils::convertNVSToNSS(

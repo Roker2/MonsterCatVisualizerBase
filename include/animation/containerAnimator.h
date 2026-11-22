@@ -131,23 +131,11 @@ protected:
     void removeOutsideViewport(double timeSeconds,
         std::int32_t viewportWidth,
         std::int32_t viewportHeight,
-        std::size_t desiredCount,
-        std::size_t shrinkLimit,
+        std::size_t /* desiredCount */,
         Extent&& extent)
     {
-        const std::size_t oldCount = m_storagePtr->getDataSize();
-        std::size_t removeCount = oldCount > desiredCount
-            ? std::min(oldCount - desiredCount, shrinkLimit)
-            : 0;
-
         m_storagePtr->removeIf([&](const DataModel& element)
         {
-            if (removeCount > 0)
-            {
-                --removeCount;
-                return true;
-            }
-
             const double age = timeSeconds - element.trajectory.startTimeSeconds;
             if (utils::Approximate::greater(age, element.lifetime.lifetimeSeconds))
                 return true;

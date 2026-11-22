@@ -27,7 +27,7 @@ void LinesAnimator::removeElements(double timeSeconds,
     std::int32_t viewportHeight,
     std::size_t desiredCount)
 {
-    removeOutsideViewport(timeSeconds, viewportWidth, viewportHeight, desiredCount, appendLimit,
+    removeOutsideViewport(timeSeconds, viewportWidth, viewportHeight, desiredCount,
         [](const DataModel& line)
         {
             return (line.geometry.length + line.geometry.lineWidth) * 0.5f;

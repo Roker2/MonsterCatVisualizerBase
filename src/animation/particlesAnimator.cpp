@@ -52,7 +52,7 @@ void ParticlesAnimator::removeElements(double timeSeconds,
     const float minRadius = utils::SpatialMathUtils::convertSSToNSS(
         DataModel::minRadiusPx, viewportWidth, viewportHeight);
 
-    removeOutsideViewport(timeSeconds, viewportWidth, viewportHeight, desiredCount, appendLimit,
+    removeOutsideViewport(timeSeconds, viewportWidth, viewportHeight, desiredCount,
         [&minRadius](const DataModel& particle)
         {
             return std::max(particle.geometry.radius, minRadius);

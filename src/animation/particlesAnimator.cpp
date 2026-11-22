@@ -71,6 +71,7 @@ ParticlesAnimator::DataModel ParticlesAnimator::generateElement(double startTime
     return DataModel
     {
         generateTrajectory(startTimeSeconds, direction),
+        generateLifetime(),
         GeometryDescriptor
         {
             m_generationDescriptor.radius(m_rng)

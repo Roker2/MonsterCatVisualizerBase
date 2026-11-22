@@ -5,46 +5,29 @@
 
 #pragma once
 
-#include <cmath>
-
-#include "utils/approximate.h"
-#include "primitives/minMax.h"
-#include "primitives/color.h"
+#include "models/baseGenerationData.h"
+#include "models/lifetime.h"
 #include "models/trajectory.h"
 
 namespace monsterCatVisualizer::models
 {
 
-struct LineGenerationDescriptor
+struct LineGenerationDescriptor : public BaseGenerationDescriptor
 {
-    static constexpr primitives::MinMax<float> floatValidator{0.0f, 1.0f};
-
     bool isValid() const
     {
-        const bool elementsDensityValid = std::isfinite(elementsDensity) &&
-            elementsDensity > utils::elementsDensityMin;
-        const bool speedValid = utils::Approximate::less(speed.min, speed.max) &&
-            floatValidator.contains(speed.min, false) &&
-            floatValidator.contains(speed.max, false);
+        if (!BaseGenerationDescriptor::isValid())
+            return false;
+
         const bool lengthValid = utils::Approximate::less(length.min, length.max) &&
             floatValidator.contains(length.min, false) &&
             floatValidator.contains(length.max, false);
         const bool lineWidthValid = floatValidator.contains(lineWidth, false);
-        const bool colorValid =
-            color.min.r <= color.max.r &&
-            color.min.g <= color.max.g &&
-            color.min.b <= color.max.b &&
-            utils::Approximate::less(color.min.a, color.max.a) &&
-            floatValidator.contains(color.min.a, true) &&
-            floatValidator.contains(color.max.a, true);
+        const bool colorValid = isColorRGBAValid(color);
 
-        return elementsDensityValid && speedValid && lengthValid &&
-            lineWidthValid && colorValid;
+        return lengthValid && lineWidthValid && colorValid;
     }
 
-    float elementsDensity{};
-
-    primitives::MinMax<float> speed{};
     primitives::MinMax<float> length{};
     float lineWidth{};
     primitives::MinMax<primitives::ColorRGBA<>> color{};
@@ -68,6 +51,7 @@ struct Line
     };
 
     TrajectoryDescriptor trajectory{};
+    LifetimeDescriptor lifetime{};
     GeometryDescriptor geometry{};
     VisualDescriptor visual{};
 };

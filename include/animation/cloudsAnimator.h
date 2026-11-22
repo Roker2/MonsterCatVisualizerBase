@@ -19,7 +19,7 @@ namespace monsterCatVisualizer::animation
 class CloudsAnimator : public ContainerAnimator<models::Cloud>
 {
 public:
-    static constexpr std::size_t appendLimit = 25;
+    static constexpr std::size_t appendLimit = 5;
 
     using ThemeColorStatePtr = std::shared_ptr<utils::ThemeColorState>;
 

@@ -19,6 +19,7 @@
 #include "primitives/color.h"
 #include "primitives/vector2.h"
 #include "models/container.h"
+#include "models/lifetime.h"
 #include "models/trajectory.h"
 #include "animation/baseAnimator.h"
 
@@ -76,6 +77,7 @@ protected:
     struct SharedGenerationDescriptor
     {
         using DistF = std::uniform_real_distribution<float>;
+        using DistD = std::uniform_real_distribution<double>;
         using DistU16 = std::uniform_int_distribution<std::uint16_t>;
 
         template <typename SourceDescriptor>
@@ -86,6 +88,10 @@ protected:
 
             elementsDensity = source.elementsDensity;
             speed = DistF{source.speed.min, source.speed.max};
+            lifetimeSeconds = DistD{source.lifetimeSeconds.min, source.lifetimeSeconds.max};
+            fadeInSeconds = DistD{source.fadeInSeconds.min, source.fadeInSeconds.max};
+            fadeOutSeconds = DistD{source.fadeOutSeconds.min, source.fadeOutSeconds.max};
+
             colorR = DistU16{source.color.min.r, source.color.max.r};
             colorG = DistU16{source.color.min.g, source.color.max.g};
             colorB = DistU16{source.color.min.b, source.color.max.b};
@@ -97,6 +103,10 @@ protected:
         DistF position{0.0f, 1.0f};
         DistF angle{0.0f, utils::twoPi};
         DistF speed{};
+
+        DistD lifetimeSeconds{};
+        DistD fadeInSeconds{};
+        DistD fadeOutSeconds{};
 
         DistU16 colorR{};
         DistU16 colorG{};
@@ -119,6 +129,11 @@ protected:
     {
         m_storagePtr->removeIf([&](const DataModel& element)
         {
+            if (utils::Approximate::greater(
+                timeSeconds - element.trajectory.startTimeSeconds,
+                element.lifetime.lifetimeSeconds))
+                return true;
+
             const auto position = element.trajectory.calculatePosition(
                 timeSeconds, viewportWidth, viewportHeight);
             const float flatExtentNSS = extent(element);
@@ -162,6 +177,16 @@ protected:
             direction,
             m_sharedGenerationDescriptor.speed(m_rng),
             startTimeSeconds
+        };
+    }
+
+    models::LifetimeDescriptor generateLifetime()
+    {
+        return models::LifetimeDescriptor
+        {
+            m_sharedGenerationDescriptor.lifetimeSeconds(m_rng),
+            m_sharedGenerationDescriptor.fadeInSeconds(m_rng),
+            m_sharedGenerationDescriptor.fadeOutSeconds(m_rng),
         };
     }
 

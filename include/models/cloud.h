@@ -5,47 +5,30 @@
 
 #pragma once
 
-#include <cmath>
-
-#include "utils/approximate.h"
-#include "primitives/minMax.h"
-#include "primitives/color.h"
+#include "models/baseGenerationData.h"
+#include "models/lifetime.h"
 #include "models/trajectory.h"
 
 namespace monsterCatVisualizer::models
 {
 
-struct CloudGenerationDescriptor
+struct CloudGenerationDescriptor : public BaseGenerationDescriptor
 {
-    static constexpr primitives::MinMax<float> floatValidator{0.0f, 1.0f};
-
     bool isValid() const
     {
-        const bool elementsDensityValid = std::isfinite(elementsDensity) &&
-            elementsDensity > utils::elementsDensityMin;
-        const bool speedValid = utils::Approximate::less(speed.min, speed.max) &&
-            floatValidator.contains(speed.min, false) &&
-            floatValidator.contains(speed.max, false);
+        if (!BaseGenerationDescriptor::isValid())
+            return false;
+
         const bool radiusValid = utils::Approximate::less(radius.min, radius.max) &&
             floatValidator.contains(radius.min, false) &&
             floatValidator.contains(radius.max, false);
-        const bool colorValid =
-            color.min.r <= color.max.r &&
-            color.min.g <= color.max.g &&
-            color.min.b <= color.max.b &&
-            utils::Approximate::less(color.min.a, color.max.a) &&
-            floatValidator.contains(color.min.a, true) &&
-            floatValidator.contains(color.max.a, true);
+        const bool colorValid = isColorRGBAValid(color);
         const bool themeColorProbabilityValid =
             floatValidator.contains(themeColorProbability, true);
 
-        return elementsDensityValid && speedValid && radiusValid && colorValid &&
-            themeColorProbabilityValid;
+        return radiusValid && colorValid && themeColorProbabilityValid;
     }
 
-    float elementsDensity{};
-
-    primitives::MinMax<float> speed{};
     primitives::MinMax<float> radius{};
     primitives::MinMax<primitives::ColorRGBA<>> color{};
     float themeColorProbability{};
@@ -68,6 +51,7 @@ struct Cloud
     };
 
     TrajectoryDescriptor trajectory{};
+    LifetimeDescriptor lifetime{};
     GeometryDescriptor geometry{};
     VisualDescriptor visual{};
 };

@@ -59,6 +59,7 @@ CloudsAnimator::DataModel CloudsAnimator::generateElement(double startTimeSecond
     return DataModel
     {
         generateTrajectory(startTimeSeconds, direction),
+        generateLifetime(),
         GeometryDescriptor
         {
             m_generationDescriptor.radius(m_rng)

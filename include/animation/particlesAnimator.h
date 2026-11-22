@@ -18,7 +18,7 @@ namespace monsterCatVisualizer::animation
 class ParticlesAnimator : public ContainerAnimator<models::Particle>
 {
 public:
-    static constexpr std::size_t appendLimit = 250;
+    static constexpr std::size_t appendLimit = 100;
 
     struct GenerationDescriptor
     {

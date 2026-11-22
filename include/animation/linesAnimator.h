@@ -17,7 +17,7 @@ namespace monsterCatVisualizer::animation
 class LinesAnimator : public ContainerAnimator<models::Line>
 {
 public:
-    static constexpr std::size_t appendLimit = 50;
+    static constexpr std::size_t appendLimit = 5;
 
     struct GenerationDescriptor
     {

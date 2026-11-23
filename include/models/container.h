@@ -117,9 +117,9 @@ public:
             return false;
 
         m_hasPatch = true;
-        const OperationRemove operation{index, count};
+        const IndexRange operation{index, count};
         m_patch.removeOperations.push_back(operation);
-        return applyRemoveOperation(m_data, operation);
+        return applyRemoveOperation(m_data, operation, &m_patch.modifiedRanges);
     }
 
     /** 2. Remove matching elements; removal after append is not allowed. */
@@ -142,6 +142,7 @@ public:
         std::lock_guard<std::mutex> lock(m_mutex);
         m_hasPatch = true;
         m_patch.appended.push_back(value);
+        addToModifiedRanges(IndexRange{m_data.size(), 1}, m_patch.modifiedRanges);
         m_data.push_back(value);
     }
 
@@ -156,6 +157,7 @@ public:
         m_hasPatch = true;
         m_patch.appended.insert(
             m_patch.appended.end(), elements.begin(), elements.end());
+        addToModifiedRanges(IndexRange{m_data.size(), elements.size()}, m_patch.modifiedRanges);
         m_data.insert(m_data.end(), elements.begin(), elements.end());
     }
 
@@ -173,7 +175,7 @@ private:
         auto& operations = m_patch.removeOperations;
         const std::size_t firstNewOperation = operations.size();
 
-        OperationRemove current{};
+        IndexRange current{};
 
         for (std::size_t i = m_data.size(); i > 0; --i)
         {
@@ -199,7 +201,7 @@ private:
 
         for (std::size_t i = firstNewOperation; i < operations.size(); ++i)
         {
-            if (!applyRemoveOperation(m_data, operations[i]))
+            if (!applyRemoveOperation(m_data, operations[i], &m_patch.modifiedRanges))
                 return false;
         }
 

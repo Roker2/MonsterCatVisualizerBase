@@ -2,18 +2,29 @@
 
 #pragma once
 
+#include <algorithm>
 #include <cstddef>
 #include <iterator>
+#include <set>
+#include <type_traits>
 #include <utility>
 #include <vector>
 
 namespace monsterCatVisualizer::models
 {
 
-struct OperationRemove
+struct IndexRange
 {
     std::size_t index{};
     std::size_t count{};
+};
+
+struct IndexRangeComparator
+{
+    inline bool operator()(const IndexRange& lhs, const IndexRange& rhs) const
+    {
+        return lhs.index < rhs.index;
+    }
 };
 
 template <typename T>
@@ -29,15 +40,49 @@ struct Patch
         clearFlag = false;
         removeOperations.clear();
         appended.clear();
+        modifiedRanges.clear();
     }
 
     bool clearFlag{};
-    std::vector<OperationRemove> removeOperations;
+    std::vector<IndexRange> removeOperations;
     std::vector<T> appended;
+
+    std::set<IndexRange, IndexRangeComparator> modifiedRanges;
 };
 
-template <typename Container>
-bool applyRemoveOperation(Container& data, const OperationRemove& operation)
+template <typename ModifiedRanges>
+void addToModifiedRanges(const IndexRange& operation,
+    ModifiedRanges& modifiedRanges)
+{
+    if (operation.count == 0)
+        return;
+
+    std::size_t begin = operation.index;
+    std::size_t end = operation.index + operation.count;
+
+    auto it = modifiedRanges.lower_bound(IndexRange{begin, 0});
+
+    if (it != modifiedRanges.begin())
+    {
+        const auto previous = std::prev(it);
+        if (previous->index + previous->count >= begin)
+            it = previous;
+    }
+
+    while (it != modifiedRanges.end() && it->index <= end)
+    {
+        begin = std::min(begin, it->index);
+        end = std::max(end, it->index + it->count);
+        it = modifiedRanges.erase(it);
+    }
+
+    modifiedRanges.insert(it, IndexRange{begin, end - begin});
+}
+
+template <typename Container, typename ModifiedRanges = std::nullptr_t>
+bool applyRemoveOperation(Container& data,
+    const IndexRange& operation,
+    ModifiedRanges* modifiedRanges = nullptr)
 {
     if (operation.index > data.size() ||
         operation.count > data.size() - operation.index)
@@ -54,6 +99,14 @@ bool applyRemoveOperation(Container& data, const OperationRemove& operation)
     {
         // Erase the range directly when it is at the end or moving the tail is cheaper.
         data.erase(begin, end);
+
+        if constexpr (!std::is_same_v<ModifiedRanges, std::nullptr_t>)
+        {
+            if (modifiedRanges)
+            {
+                addToModifiedRanges(IndexRange{operation.index, tailSize}, *modifiedRanges);
+            }
+        }
     }
     else
     {
@@ -65,6 +118,14 @@ bool applyRemoveOperation(Container& data, const OperationRemove& operation)
 
         const auto tailBegin = data.end() - static_cast<std::ptrdiff_t>(operation.count);
         data.erase(tailBegin, data.end());
+
+        if constexpr (!std::is_same_v<ModifiedRanges, std::nullptr_t>)
+        {
+            if (modifiedRanges)
+            {
+                addToModifiedRanges(IndexRange{operation.index, operation.count}, *modifiedRanges);
+            }
+        }
     }
 
     return true;

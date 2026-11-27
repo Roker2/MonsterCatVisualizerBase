@@ -15,30 +15,25 @@ LinesAnimator::GenerationDescriptor::GenerationDescriptor(
 {
 }
 
-LinesAnimator::LinesAnimator(StoragePtr storagePtr,
-    const SourceGenerationDescriptor& source)
-    : ContainerAnimator<DataModel>(std::move(storagePtr), source),
+LinesAnimator::LinesAnimator(const SourceGenerationDescriptor& source,
+    StoragePtr storagePtr)
+    : ContainerAnimator<DataModel>(source, std::move(storagePtr)),
       m_generationDescriptor(source)
 {
 }
 
-void LinesAnimator::removeElements(double timeSeconds,
+void LinesAnimator::update(double timeSeconds,
     std::int32_t viewportWidth,
-    std::int32_t viewportHeight,
-    std::size_t desiredCount)
+    std::int32_t viewportHeight)
 {
+    if (m_storagePtr->hasPatch())
+        return;
+    const std::size_t desiredCount = calculateDesiredCount(viewportWidth, viewportHeight);
     removeOutsideViewport(timeSeconds, viewportWidth, viewportHeight, desiredCount,
         [](const DataModel& line)
         {
             return (line.geometry.length + line.geometry.lineWidth) * 0.5f;
         });
-}
-
-void LinesAnimator::appendElements(double timeSeconds,
-    std::int32_t viewportWidth,
-    std::int32_t viewportHeight,
-    std::size_t desiredCount)
-{
     if (appendGeneratedElements(timeSeconds, viewportWidth, viewportHeight, desiredCount, appendLimit))
     {
         m_generateInitial = false;

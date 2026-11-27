@@ -31,7 +31,7 @@ AnimationOrchestrator::AnimationOrchestrator(TaskSchedulerPtr taskScheduler,
 
 AnimationOrchestrator::~AnimationOrchestrator()
 {
-    removeAllAnimators();
+    removeAnimators();
 }
 
 const AnimationOrchestrator::Storage& AnimationOrchestrator::getStorage() const
@@ -100,7 +100,7 @@ void AnimationOrchestrator::removeAnimator(utils::TaskScheduler::TaskId taskId)
     }
 }
 
-void AnimationOrchestrator::removeAllAnimators()
+void AnimationOrchestrator::removeAnimators()
 {
     for (const auto& [_, taskId] : m_animators)
     {

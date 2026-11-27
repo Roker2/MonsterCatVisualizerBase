@@ -37,33 +37,27 @@ ParticlesAnimator::GenerationDescriptor::GenerationDescriptor(
 {
 }
 
-ParticlesAnimator::ParticlesAnimator(StoragePtr storagePtr,
-    const SourceGenerationDescriptor& source)
-    : ContainerAnimator<DataModel>(std::move(storagePtr), source),
+ParticlesAnimator::ParticlesAnimator(const SourceGenerationDescriptor& source,
+    StoragePtr storagePtr)
+    : ContainerAnimator<DataModel>(source, std::move(storagePtr)),
       m_generationDescriptor(source)
 {
 }
 
-void ParticlesAnimator::removeElements(double timeSeconds,
+void ParticlesAnimator::update(double timeSeconds,
     std::int32_t viewportWidth,
-    std::int32_t viewportHeight,
-    std::size_t desiredCount)
+    std::int32_t viewportHeight)
 {
+    if (m_storagePtr->hasPatch())
+        return;
+    const std::size_t desiredCount = calculateDesiredCount(viewportWidth, viewportHeight);
     const float minRadius = utils::SpatialMathUtils::convertSSToNSS(
         DataModel::minRadiusPx, viewportWidth, viewportHeight);
-
     removeOutsideViewport(timeSeconds, viewportWidth, viewportHeight, desiredCount,
         [&minRadius](const DataModel& particle)
         {
             return std::max(particle.geometry.radius, minRadius);
         });
-}
-
-void ParticlesAnimator::appendElements(double timeSeconds,
-    std::int32_t viewportWidth,
-    std::int32_t viewportHeight,
-    std::size_t desiredCount)
-{
     appendGeneratedElements(timeSeconds, viewportWidth, viewportHeight, desiredCount, appendLimit);
 }
 

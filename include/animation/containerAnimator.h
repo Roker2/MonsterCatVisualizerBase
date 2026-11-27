@@ -21,13 +21,13 @@
 #include "models/container.h"
 #include "models/lifetime.h"
 #include "models/trajectory.h"
-#include "animation/baseAnimator.h"
+#include "animation/iAnimator.h"
 
 namespace monsterCatVisualizer::animation
 {
 
 template <typename T>
-class ContainerAnimator : public BaseAnimator
+class ContainerAnimator : public IAnimator
 {
 public:
     using DataModel = T;
@@ -43,34 +43,16 @@ public:
         return m_storagePtr;
     }
 
-    using BaseAnimator::initialize;
-
-    void initialize(std::size_t desiredCount) override
+    void initialize(std::int32_t viewportWidth,
+        std::int32_t viewportHeight) override
     {
+        const std::size_t desiredCount = calculateDesiredCount(viewportWidth, viewportHeight);
         m_storagePtr->reserve(desiredCount);
     }
 
     void clear() override
     {
         m_storagePtr->clear();
-    }
-
-    /**
-     * An update is not atomic across the patch check, removal, and append.
-     * Intended for one producer and one consumer.
-     * No other thread may mutate this storage while the producer is updating it.
-     */
-    void update(double timeSeconds, std::int32_t viewportWidth, std::int32_t viewportHeight) override
-    {
-        if (m_storagePtr->hasPatch())
-            return;
-        BaseAnimator::update(timeSeconds, viewportWidth, viewportHeight);
-    }
-
-    std::size_t calculateDesiredCount(std::int32_t viewportWidth, std::int32_t viewportHeight) const override
-    {
-        return utils::SpatialMathUtils::calculateDesiredCount(
-            m_sharedGenerationDescriptor.elementsDensity, viewportWidth, viewportHeight);
     }
 
 protected:
@@ -119,9 +101,10 @@ protected:
     };
 
     template <typename SourceDescriptor>
-    ContainerAnimator(StoragePtr storagePtr, const SourceDescriptor& source)
-        : m_storagePtr(std::move(storagePtr)),
-          m_sharedGenerationDescriptor(source)
+    ContainerAnimator(const SourceDescriptor& source,
+        StoragePtr storagePtr)
+        : m_sharedGenerationDescriptor(source),
+        m_storagePtr(std::move(storagePtr))
     {
         if (!m_storagePtr)
             throw std::runtime_error("ContainerAnimator: empty storage");
@@ -196,6 +179,13 @@ protected:
         std::int32_t viewportWidth,
         std::int32_t viewportHeight) = 0;
 
+    std::size_t calculateDesiredCount(std::int32_t viewportWidth,
+        std::int32_t viewportHeight) const
+    {
+        return utils::SpatialMathUtils::calculateDesiredCount(
+            m_sharedGenerationDescriptor.elementsDensity, viewportWidth, viewportHeight);
+    }
+
     models::TrajectoryDescriptor generateTrajectory(double timeSeconds, primitives::Vector2<> direction)
     {
         return models::TrajectoryDescriptor
@@ -238,8 +228,9 @@ protected:
         };
     }
 
-    StoragePtr m_storagePtr;
     SharedGenerationDescriptor m_sharedGenerationDescriptor;
+    StoragePtr m_storagePtr;
+    std::mt19937 m_rng{std::random_device{}()};
 };
 
 } // namespace monsterCatVisualizer::animation

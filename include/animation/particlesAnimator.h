@@ -44,19 +44,19 @@ public:
         DistPWF radius{};
     };
 
-    ParticlesAnimator(StoragePtr storagePtr,
-        const SourceGenerationDescriptor& source);
+    ParticlesAnimator(const SourceGenerationDescriptor& source,
+        StoragePtr storagePtr);
+
+    /**
+     * An update is not atomic across the patch check, removal, and append.
+     * Intended for one producer and one consumer.
+     * No other thread may mutate this storage while the producer is updating it.
+     */
+    void update(double timeSeconds,
+        std::int32_t viewportWidth,
+        std::int32_t viewportHeight) override;
 
 protected:
-    void removeElements(double timeSeconds,
-        std::int32_t viewportWidth,
-        std::int32_t viewportHeight,
-        std::size_t desiredCount) override;
-    void appendElements(double timeSeconds,
-        std::int32_t viewportWidth,
-        std::int32_t viewportHeight,
-        std::size_t desiredCount) override;
-
     DataModel generateElement(double timeSeconds,
         std::int32_t viewportWidth,
         std::int32_t viewportHeight) override;

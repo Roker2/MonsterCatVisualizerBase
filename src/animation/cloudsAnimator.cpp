@@ -16,9 +16,9 @@ CloudsAnimator::GenerationDescriptor::GenerationDescriptor(
 }
 
 CloudsAnimator::CloudsAnimator(ThemeColorStatePtr themeColorState,
-    StoragePtr storagePtr,
-    const SourceGenerationDescriptor& source)
-    : ContainerAnimator<DataModel>(std::move(storagePtr), source),
+    const SourceGenerationDescriptor& source,
+    StoragePtr storagePtr)
+    : ContainerAnimator<DataModel>(source, std::move(storagePtr)),
       m_themeColorState(std::move(themeColorState)),
       m_generationDescriptor(source)
 {
@@ -31,20 +31,15 @@ CloudsAnimator::ThemeColorStatePtr CloudsAnimator::getThemeColorState() const
     return m_themeColorState;
 }
 
-void CloudsAnimator::removeElements(double timeSeconds,
+void CloudsAnimator::update(double timeSeconds,
     std::int32_t viewportWidth,
-    std::int32_t viewportHeight,
-    std::size_t desiredCount)
+    std::int32_t viewportHeight)
 {
+    if (m_storagePtr->hasPatch())
+        return;
+    const std::size_t desiredCount = calculateDesiredCount(viewportWidth, viewportHeight);
     removeOutsideViewport(timeSeconds, viewportWidth, viewportHeight, desiredCount,
         [](const DataModel& cloud) { return cloud.geometry.radius; });
-}
-
-void CloudsAnimator::appendElements(double timeSeconds,
-    std::int32_t viewportWidth,
-    std::int32_t viewportHeight,
-    std::size_t desiredCount)
-{
     appendGeneratedElements(timeSeconds, viewportWidth, viewportHeight, desiredCount, appendLimit);
 }
 

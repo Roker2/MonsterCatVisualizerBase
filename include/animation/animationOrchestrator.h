@@ -11,7 +11,7 @@
 #include "utils/animationClock.h"
 #include "utils/viewportState.h"
 #include "utils/taskScheduler.h"
-#include "animation/baseAnimator.h"
+#include "animation/iAnimator.h"
 
 namespace monsterCatVisualizer::animation
 {
@@ -21,7 +21,7 @@ class AnimationOrchestrator
 public:
     struct AnimatorDescriptor
     {
-        using AnimatorPtr = std::shared_ptr<BaseAnimator>;
+        using AnimatorPtr = std::shared_ptr<IAnimator>;
 
         AnimatorPtr animator{};
         utils::TaskScheduler::TaskId taskId{};
@@ -29,6 +29,7 @@ public:
 
     using AnimatorPtr = AnimatorDescriptor::AnimatorPtr;
     using Storage = std::vector<AnimatorDescriptor>;
+
     using TaskSchedulerPtr = std::shared_ptr<utils::TaskScheduler>;
     using AnimationClockPtr = std::shared_ptr<utils::AnimationClock>;
     using ViewportStatePtr = std::shared_ptr<utils::ViewportState>;
@@ -47,7 +48,7 @@ public:
     void addAnimator(AnimatorPtr animator, double updateIntervalSeconds);
     void removeAnimator(AnimatorPtr animator);
     void removeAnimator(utils::TaskScheduler::TaskId taskId);
-    void removeAllAnimators();
+    void removeAnimators();
 
 private:
     Storage m_animators;

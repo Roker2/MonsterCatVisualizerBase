@@ -4,6 +4,7 @@
 
 #include <cmath>
 #include <random>
+#include <stdexcept>
 
 #include "utils/defines.h"
 
